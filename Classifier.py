@@ -1,3 +1,5 @@
+#Fout Tuur, je kan wel online edit'n
+
 """
 Groepsopdracht2:
 Bertine
