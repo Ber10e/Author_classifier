@@ -8,6 +8,7 @@ Jelte
 
 from nltk.corpus import gutenberg
 from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
+from nltk import FreqDist
 import pickle
 wrdsC = gutenberg.words()
 wrds = [w.lower() for w in wrdsC]
@@ -155,5 +156,10 @@ def SentenceLengths(corpus):
     return AverageLengths
 
 
-print "/nAverage length of sentences per author:"
+print "\nAverage length of sentences by author:"
 print SentenceLengths(corpus)
+
+
+def Generate_BoW(text):
+    # generated bag of words of one text
+    return FreqDist(word_tokenize(text))
