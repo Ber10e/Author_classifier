@@ -4,8 +4,8 @@ Bertine
 Tuur
 Erlinde
 Jelte
-"""
 
+<<<<<<< HEAD
 from nltk.corpus import gutenberg
 from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
 from nltk import FreqDist
@@ -13,6 +13,8 @@ import pickle
 wrdsC = gutenberg.words()
 wrds = [w.lower() for w in wrdsC]
 """
+=======
+>>>>>>> Bestanden netjes gemaakt
 print wrds[:100]
 tt_ratio = float(len(wrds))/float(len(set(wrds)))
 print "type/token ratio:"
@@ -20,35 +22,26 @@ print tt_ratio
 print "documentlengte/aantal woorden:"
 print len(wrds)
 """
-print "-----------------"
-#---------------------------------------------------------------------------------
 
 
-trainingsteksten_lang = [(text,"lang") for text in [wrds[:x] for x in range(150,170)]] 
-trainingsteksten_kort = [(text,"kort") for text in [wrds[:x] for x in range(60,70)]] 
-trainingsteksten = trainingsteksten_lang + trainingsteksten_kort
 
-corpusfile = open('corpus.pkl','r')
-corpus = pickle.load(corpusfile)
-corpusfile.close()
+from features import features
 
-
-def classify(woorden):
+def classify(text, tr_texts, features1, categories):
     """ Classifies a text based on the trainingstexts, categories and features.
-    Args: String (a text)
+    Args: String (a text), List of Tuples (String,String), List of Strings, List of Strings
     Returns: String (prints propabilities per category)
     """
-    categories = ["lang", "kort"] 
-    features1 = ["f1","f2","f3"]    
-    trained_model = train(trainingsteksten, categories, features1)
-    print trained_model[1]
+    print "starts to classify..."  
+    trained_model = train(tr_texts, categories, features1)
     print trained_model[0]
+    print trained_model[1]
     score_cat = {}
     for c in categories:
-        noemer = 1 * P_cat(c,trainingsteksten)
+        noemer = 1 * P_cat(c,tr_texts)
         teller = 1
         for f in features1:
-            if(features(f,woorden)):
+            if(features(f,text)):
                 noemer = noemer * trained_model[1][c][f]
                 teller = teller * trained_model[0][f]
         score_cat[c] = float(noemer)/teller
@@ -91,7 +84,6 @@ def P_features_cat(features, categories, tr_texts):
             kansen[c][f]=P_feat_cat(f,c,tr_texts)
     return kansen
         
-        
 def P_feat_cat(feature,cat,tr_texts):
     """ Calculates the propability of a feature given a category, based on the traintexts.
     Args: String(feature), String(category), List of Tuples (String,String) (traintexts (text,cat))
@@ -102,18 +94,6 @@ def P_feat_cat(feature,cat,tr_texts):
         if(c==cat):
             tr_texts_cat+=[(text,c)]
     return P_feature(feature,tr_texts_cat)
-    
-def features(fs, text):
-    """ Calculates if a features is applicable to a text.
-    Args:String (featurename), String (text)
-    Returns: Boolean
-    """
-    if(fs=="f1"): # ----------------------first feature
-        return (len(text) > 100)
-    elif(fs=="f2"):# ----------------------second feature
-        return ("chapter" in text)
-    elif (fs=="f3"):# ----------------------third feature
-        return (len(text) < 80)
 
 def P_feature(f, trainingsteksten):
     """ Calculates the propability of a feature, based on a list of traintexts
@@ -136,6 +116,7 @@ def P_features(features, tr_teksten):
         kansen[f]=P_feature(f,tr_teksten)
     return kansen
 
+<<<<<<< HEAD
 classify(wrds[:70])
 
 def SentenceLengths(corpus):
@@ -163,3 +144,5 @@ print SentenceLengths(corpus)
 def Generate_BoW(text):
     # generated bag of words of one text
     return FreqDist(word_tokenize(text))
+=======
+>>>>>>> Bestanden netjes gemaakt
