@@ -28,7 +28,7 @@ trainingsteksten_lang = [(text,"lang") for text in [wrds[:x] for x in range(150,
 trainingsteksten_kort = [(text,"kort") for text in [wrds[:x] for x in range(60,70)]] 
 trainingsteksten = trainingsteksten_lang + trainingsteksten_kort
 
-corpusfile = open('corpus.pkl','rb')
+corpusfile = open('corpus.pkl','r')
 corpus = pickle.load(corpusfile)
 corpusfile.close()
 
