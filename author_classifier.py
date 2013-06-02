@@ -1,27 +1,53 @@
 from getcorpus import corpus
 from classifier import classify
-from nltk.corpus import gutenberg
 from help_functions import *
 
 
+def split_train_test_data(classes, corpus, num_train):
+    """splitst het corpus in een train deel (lengte te bepalen) en een testset
+    """
+    train_texts = []
+    test_texts = []
+    num_author = {}
+    print len(corpus)
+    for author in classes:
+        num_author[author] = 0
+    for (text,author) in corpus:
+        if (num_author[author]<num_train):
+            train_texts += [(text,author)]
+            num_author[author] += 1
+        else:
+            test_texts += [(text,author)]
+    return {"test":test_texts,"train": train_texts} 
 
-def test(): 
-    """ Een test classification a.d.h.v. het gutenberg corpus. (Is het een korte of lange text? >100 / < 100wrd) """
-    wrdsC = gutenberg.words()
-    wrds = [w.lower() for w in wrdsC]
-    trainingsteksten_lang = [(text,"lang") for text in [wrds[:x] for x in range(150,170)]] 
-    trainingsteksten_kort = [(text,"kort") for text in [wrds[:x] for x in range(60,70)]] 
-    trainingsteksten = trainingsteksten_lang + trainingsteksten_kort
-    classify("Hallo!",trainingsteksten,["f1","f2","f3"],["lang","kort"])
+
+def test():
+    data = split_train_test_data(authors, corpus(),40)
+    testdata = data["test"]
+    traindata = data["train"]
+    #print "length testdata:" + str(len(testdata))
+    #print "length traindata:" +str(len(traindata))
+    text = testdata[7]
+    print text[0].lower().split()[:30]
+    print ("\nTEXT OF: " + text[1])
+    classify(text[0],traindata, features,authors)
+    
     
 # lijst gewenste auteurs
 authors=["AaronPressman","AlanCrosby","AlexanderSmith","BenjaminKangLim","BernardHickey"]
-    
+features = ["f1","f2","f3","f4","f5","f6","f7","f8"]   
     
 test()
 
 print "\nAverage length of sentences per author:"
-print SentenceLengths(corpus())
+#print SentenceLengths(corpus())
 
 corpus=corpus()
-print author_bow('AaronPressman',corpus)
+"""
+for a in authors:
+    print a + ":\n"
+    print sorted(author_bow(a,corpus).items(), key=lambda x: x[1], reverse=True)[:30]  
+""" 
+    
+    
+    
