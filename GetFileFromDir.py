@@ -10,7 +10,7 @@ corpus=[] #Een lijst van tuples die een string (per nieuwsbericht/file) en een l
 authors=["AaronPressman","AlanCrosby","AlexanderSmith","BenjaminKangLim","BernardHickey"]
 
 def get_content(filename):
-  """Read file and return contents as string
+	"""Read file and return contents as string
 	"""
 	f=open(filename,'r')
 	return f.read()
