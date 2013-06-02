@@ -1,10 +1,33 @@
 from nltk import FreqDist
 from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
-
+import random
 
 def Generate_BoW(text):
     # generated bag of words of one text
     return FreqDist(word_tokenize(text.lower()))
+
+def split_train_test_data(classes, corpus, num_train):
+    """splitst het corpus in een train deel (lengte te bepalen) en een testset
+    """
+    train_texts = []
+    test_texts = []
+    num_author = {}
+    random.shuffle(corpus,random.random)
+    #print len(corpus)
+    for author in classes:
+        num_author[author] = 0
+    for (text,author) in corpus:
+        if (num_author[author]<num_train):
+            train_texts += [(text,author)]
+            num_author[author] += 1
+        else:
+            test_texts += [(text,author)]
+    return {"test":test_texts,"train": train_texts} 
+
+def print_list(list):
+    """ prints a list"""
+    for (x,y) in list:
+        print x + "\t\t" + str(y)
 
     
 def SentenceLengths(corp):
@@ -31,7 +54,14 @@ def numberoftexts_cat(author,texts):
         if(cat == author):
             count +=1
     return count 
-
+def occurs_in_text(word,text):
+    """return the number of times the word occurs in the text"""
+    count = 0
+    for w in text.split():
+        if(w==word):
+            count +=1
+    return count
+    
 def author_bow(author,corpus):
     """for given author, builds a dictionary:
     keys: used words
