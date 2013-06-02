@@ -7,6 +7,8 @@ Jelte
 """
 
 from nltk.corpus import gutenberg
+from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
+import pickle
 wrdsC = gutenberg.words()
 wrds = [w.lower() for w in wrdsC]
 """
@@ -24,6 +26,11 @@ print "-----------------"
 trainingsteksten_lang = [(text,"lang") for text in [wrds[:x] for x in range(150,170)]] 
 trainingsteksten_kort = [(text,"kort") for text in [wrds[:x] for x in range(60,70)]] 
 trainingsteksten = trainingsteksten_lang + trainingsteksten_kort
+
+corpusfile = open('corpus.pkl','rb')
+corpus = pickle.load(corpusfile)
+corpusfile.close()
+
 
 def classify(woorden):
     categories = ["lang", "kort"]
@@ -97,8 +104,25 @@ def P_features(features, tr_teksten):
         kansen[f]=P_feature(f,tr_teksten)
     return kansen
 
-
-    
-    
-    
 classify(wrds[:70])
+
+def SentenceLengths(corpus):
+    AverageLengths={}
+    
+    for (text,cat) in corpus:
+        AverageLengths[cat]=[]
+    
+    for (text,cat) in corpus:
+       sentences=[len(word_tokenize(t)) for t in sent_tokenize(text)]
+       sentence_length_text = sum(sentences) / float(len(sentences))
+       AverageLengths[cat].append(sentence_length_text)
+      
+    for cat in AverageLengths.keys():
+        average_sentence_cat = sum(AverageLengths[cat])/float(len(AverageLengths[cat]))
+        AverageLengths[cat] = average_sentence_cat
+    
+    return AverageLengths
+
+
+print "/nAverage length of sentences per author:"
+print SentenceLengths(corpus)
