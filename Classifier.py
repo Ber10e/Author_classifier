@@ -33,7 +33,11 @@ corpusfile.close()
 
 
 def classify(woorden):
-    categories = ["lang", "kort"]
+    """ Classifies a text based on the trainingstexts, categories and features.
+    Args: String (a text)
+    Returns: String (prints propabilities per category)
+    """
+    categories = ["lang", "kort"] 
     features1 = ["f1","f2","f3"]    
     trained_model = train(trainingsteksten, categories, features1)
     print trained_model[1]
@@ -53,6 +57,10 @@ def classify(woorden):
     return "schrijver"
 
 def P_cat(category,tr_texts):
+    """ Calculates the propability of a text to be of a given category, using a set of traintexts
+    Args: String (category), List of Strings (list of traintexts)
+    Returns: Float
+    """
     tr_texts_cat = []
     for (text,c) in tr_texts:
         if(c==category):
@@ -60,12 +68,19 @@ def P_cat(category,tr_texts):
     return float(len(tr_texts_cat))/len(tr_texts)
     
 def train(tr_texts,categories,features):
+    """ Trains a classifier based on a set of given traintexts, categories and features.
+    Args:List of Strings (tr-texts), List of Strings (categories), List of Strings (features)
+    Returns:Tuple of Dictionaries (dict{feature:P_feature},dict{cat:{feature:P_feature_cat}})
+    """
     P_features1 = P_features(features,tr_texts)
     P_features_cat1 =  P_features_cat(features,categories,tr_texts)
     return (P_features1,P_features_cat1)
     
-    
 def P_features_cat(features, categories, tr_texts):
+    """ Calculates the propabilities of a list of features in a the given categories, based on the traintexts.
+    Args:List of Strings (features), List of Strings (categories), List of Tuples (String,String) (traintexts (text,category))
+    Returns: {String:{String:Float}} ({category:{feature:propability}})
+    """
     kansen ={}
     for c in categories:
         kansen[c]={}
@@ -76,22 +91,34 @@ def P_features_cat(features, categories, tr_texts):
     return kansen
         
         
-def P_feat_cat(feature,cat,tr_teksten):
+def P_feat_cat(feature,cat,tr_texts):
+    """ Calculates the propability of a feature given a category, based on the traintexts.
+    Args: String(feature), String(category), List of Tuples (String,String) (traintexts (text,cat))
+    Returns: Float
+    """
     tr_texts_cat = []
-    for (text,c) in tr_teksten:
+    for (text,c) in tr_texts:
         if(c==cat):
             tr_texts_cat+=[(text,c)]
     return P_feature(feature,tr_texts_cat)
     
-def features(fs, woorden):
-    if(fs=="f1"):
-        return (len(woorden) > 100)
-    elif(fs=="f2"):
-        return ("chapter" in woorden)
-    elif (fs=="f3"):
-        return (len(woorden) < 80)
+def features(fs, text):
+    """ Calculates if a features is applicable to a text.
+    Args:String (featurename), String (text)
+    Returns: Boolean
+    """
+    if(fs=="f1"): # ----------------------first feature
+        return (len(text) > 100)
+    elif(fs=="f2"):# ----------------------second feature
+        return ("chapter" in text)
+    elif (fs=="f3"):# ----------------------third feature
+        return (len(text) < 80)
 
 def P_feature(f, trainingsteksten):
+    """ Calculates the propability of a feature, based on a list of traintexts
+    Args: String (feature), List of Tuples (String,String) (traintexts (text,category))
+    Returns: Float
+    """
     voorkomens = 0
     for (tekst,cat) in trainingsteksten:
         if(features(f,tekst)):
@@ -99,6 +126,10 @@ def P_feature(f, trainingsteksten):
     return float(voorkomens)/float(len(trainingsteksten))
     
 def P_features(features, tr_teksten):
+    """ Calculates the propability of features to appear in a text, based on a list of traintexts
+    Args: List of Strings (features), List of Tuples (String,String) (traintexts (text,category))
+    Returns: {String:Float} ({feature:propability})
+    """
     kansen = {}
     for f in features:
         kansen[f]=P_feature(f,tr_teksten)
