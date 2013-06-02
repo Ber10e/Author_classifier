@@ -23,3 +23,5 @@ test()
 print "\nAverage length of sentences per author:"
 print SentenceLengths(corpus())
 
+corpus=corpus()
+print author_bow('AaronPressman',corpus)
