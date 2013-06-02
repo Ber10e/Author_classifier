@@ -1,3 +1,5 @@
+from help_functions import *
+
 def features(fs, text):
     """ Calculates if a features is applicable to a text.
     Args:String (featurename), String (text)

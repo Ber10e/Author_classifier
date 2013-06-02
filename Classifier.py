@@ -5,16 +5,6 @@ Tuur
 Erlinde
 Jelte
 
-<<<<<<< HEAD
-from nltk.corpus import gutenberg
-from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
-from nltk import FreqDist
-import pickle
-wrdsC = gutenberg.words()
-wrds = [w.lower() for w in wrdsC]
-"""
-=======
->>>>>>> Bestanden netjes gemaakt
 print wrds[:100]
 tt_ratio = float(len(wrds))/float(len(set(wrds)))
 print "type/token ratio:"
@@ -32,7 +22,7 @@ def classify(text, tr_texts, features1, categories):
     Args: String (a text), List of Tuples (String,String), List of Strings, List of Strings
     Returns: String (prints propabilities per category)
     """
-    print "starts to classify..."  
+    print "--------------------------:starts classification:"  
     trained_model = train(tr_texts, categories, features1)
     print trained_model[0]
     print trained_model[1]
@@ -47,7 +37,7 @@ def classify(text, tr_texts, features1, categories):
         score_cat[c] = float(noemer)/teller
         print c
         print score_cat[c]
-    
+    print "--------------------------:end of classification"
     return "schrijver"
 
 def P_cat(category,tr_texts):
@@ -116,33 +106,3 @@ def P_features(features, tr_teksten):
         kansen[f]=P_feature(f,tr_teksten)
     return kansen
 
-<<<<<<< HEAD
-classify(wrds[:70])
-
-def SentenceLengths(corpus):
-    AverageLengths={}
-    
-    for (text,cat) in corpus:
-        AverageLengths[cat]=[]
-    
-    for (text,cat) in corpus:
-       sentences=[len(word_tokenize(t)) for t in sent_tokenize(text)]
-       sentence_length_text = sum(sentences) / float(len(sentences))
-       AverageLengths[cat].append(sentence_length_text)
-      
-    for cat in AverageLengths.keys():
-        average_sentence_cat = sum(AverageLengths[cat])/float(len(AverageLengths[cat]))
-        AverageLengths[cat] = average_sentence_cat
-    
-    return AverageLengths
-
-
-print "\nAverage length of sentences by author:"
-print SentenceLengths(corpus)
-
-
-def Generate_BoW(text):
-    # generated bag of words of one text
-    return FreqDist(word_tokenize(text))
-=======
->>>>>>> Bestanden netjes gemaakt
