@@ -9,14 +9,12 @@ Jelte
 from features import features
 
 def classify(text, trained_model, features1, categories,tr_texts):
-    """ Classifies a text based on the trainingstexts, categories and features.
+    """ Classifies a text based on (not per se) a trained model, categories, features and the trainingstexts.
     Args: String (a text), List of Tuples (String,String), List of Strings, List of Strings
     Returns: String (prints propabilities per category)
     """
     if (trained_model == []):
         trained_model = train(tr_texts, categories, features1)
-    #print trained_model[0]
-    #print trained_model[1]
     score_cat = {}
     for c in categories:
         noemer = 1 * P_cat(c,tr_texts)
@@ -26,15 +24,12 @@ def classify(text, trained_model, features1, categories,tr_texts):
                 noemer = noemer * trained_model[1][c][f]
                 teller = teller * trained_model[0][f]
         score_cat[c] = float(noemer)/teller
-        #print c
-        #print score_cat[c]
     result = "false"
     max_score = (1.0/len(categories))
     for c in categories:
         if (score_cat[c]>max_score):
             result = c
             max_score = score_cat[c]
-    #print "CLASSIFIED AS: " + result
     return result
 
 def P_cat(category,tr_texts):
