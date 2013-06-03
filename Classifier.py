@@ -4,22 +4,17 @@ Bertine
 Tuur
 Erlinde
 Jelte
-
-print wrds[:100]
-tt_ratio = float(len(wrds))/float(len(set(wrds)))
-print "type/token ratio:"
-print tt_ratio
-print "documentlengte/aantal woorden:"
-print len(wrds)
 """
+
 from features import features
 
-def classify(text, tr_texts, features1, categories):
+def classify(text, trained_model, features1, categories,tr_texts):
     """ Classifies a text based on the trainingstexts, categories and features.
     Args: String (a text), List of Tuples (String,String), List of Strings, List of Strings
     Returns: String (prints propabilities per category)
     """
-    trained_model = train(tr_texts, categories, features1)
+    if (trained_model == []):
+        trained_model = train(tr_texts, categories, features1)
     #print trained_model[0]
     #print trained_model[1]
     score_cat = {}

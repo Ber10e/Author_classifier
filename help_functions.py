@@ -1,6 +1,17 @@
 from nltk import FreqDist
 from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
 import random
+from getcorpus import corpus
+
+
+def printgeg():
+    wrds = corpus()
+    print "type/token ratio vijf auteurs:"
+    tt_ratio = float(len(wrds))/float(len(set(wrds)))
+    print tt_ratio
+    print "documentlengte/aantal woorden:"
+    print len(wrds)
+
 
 def Generate_BoW(text):
     # generated bag of words of one text
@@ -28,10 +39,19 @@ def print_list(list):
     """ prints a list"""
     for (x,y) in list:
         print x + "\t\t" + str(y)
-
+        
+        
+def avglength(corp):
+    count = 0
+    number = 0
+    for (text,y) in corp:
+        count += len(word_tokenize(text))
+        number += 1
+    return float(count) / number
     
 def SentenceLengths(corp):
     AverageLengths={}
+    
     
     for (text,cat) in corp:
         AverageLengths[cat]=[]

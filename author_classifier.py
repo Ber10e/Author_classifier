@@ -1,5 +1,5 @@
 from getcorpus import corpus
-from classifier import classify
+from classifier import classify,train
 from help_functions import *
 from time import time
 import pickle
@@ -23,10 +23,11 @@ def test():
         data = split_train_test_data(authors, corpus,45)
         testdata = data["test"]
         traindata = data["train"]
+        trained_model = train(traindata, authors, features)
         
         for j in range(0,len(testdata)):
             text = testdata[j]
-            if (classify(text[0],traindata, features,authors)==text[1]):
+            if (classify(text[0],trained_model, features,authors,traindata)==text[1]):
                 correct[text[1]] +=1
                 runs +=1
                 print runs
@@ -48,6 +49,9 @@ def test():
 
 test()
 
+
+print "avg length:"
+print avglength(corpus)
 #print "\nAverage length of sentences per author:"
 #print SentenceLengths(corpus())
 """
