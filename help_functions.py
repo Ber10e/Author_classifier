@@ -4,8 +4,9 @@ import random
 from getcorpus import corpus
 
 
+
 def printgeg(): # print wat gegevens over het corp
-    wrds = corp()
+    wrds = corpus(5)
     print "type/token ratio vijf auteurs:"
     tt_ratio = float(len(wrds))/float(len(set(wrds)))
     print tt_ratio
@@ -118,3 +119,12 @@ def getauthors(corp):
     for (x,a) in corp:
         authors.append(a)
     return list(set(authors))
+
+def compactcorpus(corp):
+    dict = {}
+    for (t,c) in corp:
+        if not(c in dict.keys()):
+            dict[c] = [(t,c)]
+        else:
+            dict[c].append((t,c))
+    return dict

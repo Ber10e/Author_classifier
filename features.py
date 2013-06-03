@@ -1,5 +1,5 @@
 from help_functions import *
-
+print "features imported"
 def features(fs, textU):
     """ Calculates if a features is applicable to a text.
     Args:String (featurename), String (text)

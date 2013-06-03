@@ -1,12 +1,13 @@
 from getcorpus import corpus
-from classifier import classify,train
+from classifier import train,classify,p_feat_cat,p_feature
 from help_functions import *
 from time import time
 import pickle
 
-corp=corpus(20)
+corp=corpus(5)
 authors = getauthors(corp)
 features = ["f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13","f14","f15"]  
+
 
 def test():
     start = time()
@@ -43,8 +44,19 @@ def test():
     print "percentage correct:" + str(float(totalcorrect)/runs)
     print "runtime: " + str(time()-start) + " seconds"
     
-test()
+#test()
+def testfeatures(features,corp):
+    dict = compactcorpus(corp)
+    print "------------"
+    for f in features:
+        print "\n"
+        print "P("+f+")=\t"+ str(p_feature(f,corp))
+        for cat in dict.keys():
+            print "P("+f+"|"+str(cat)+")=\t"+ str(p_feat_cat(f,cat,corp))
+    print "------------"   
 
+    
+testfeatures(features,corp)
 #print "\nAverage length of sentences per author:"
 #print SentenceLengths(corpus())
 
