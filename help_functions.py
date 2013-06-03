@@ -4,30 +4,29 @@ import random
 from getcorpus import corpus
 
 
-def printgeg():
-    wrds = corpus()
+def printgeg(): # print wat gegevens over het corp
+    wrds = corp()
     print "type/token ratio vijf auteurs:"
     tt_ratio = float(len(wrds))/float(len(set(wrds)))
     print tt_ratio
     print "documentlengte/aantal woorden:"
     print len(wrds)
 
-
 def Generate_BoW(text):
     # generated bag of words of one text
     return FreqDist(word_tokenize(text.lower()))
 
-def split_train_test_data(classes, corpus, num_train):
-    """splitst het corpus in een train deel (lengte te bepalen) en een testset
+def split_train_test_data(classes, corp, num_train):
+    """splitst het corp in een train deel (lengte te bepalen) en een testset
     """
     train_texts = []
     test_texts = []
     num_author = {}
-    random.shuffle(corpus,random.random)
-    #print len(corpus)
+    random.shuffle(corp,random.random)
+    #print len(corp)
     for author in classes:
         num_author[author] = 0
-    for (text,author) in corpus:
+    for (text,author) in corp:
         if (num_author[author]<num_train):
             train_texts += [(text,author)]
             num_author[author] += 1
@@ -39,8 +38,7 @@ def print_list(list):
     """ prints a list"""
     for (x,y) in list:
         print x + "\t\t" + str(y)
-        
-        
+               
 def avglength(corp):
     count = 0
     number = 0
@@ -66,6 +64,12 @@ def SentenceLengths(corp):
         AverageLengths[cat] = average_sentence_cat
     
     return AverageLengths
+
+def save_list_to_file(list,file):
+    f = open(file,'w')
+    for (x,y) in freqs:
+        f.write(x +"\t\t" +y + "\n")
+    f.close()
     
 def numberoftexts_cat(author,texts):
     """counts the number of texts of a given author"""
@@ -74,6 +78,7 @@ def numberoftexts_cat(author,texts):
         if(cat == author):
             count +=1
     return count 
+
 def occurs_in_text(word,text):
     """return the number of times the word occurs in the text"""
     count = 0
@@ -82,7 +87,7 @@ def occurs_in_text(word,text):
             count +=1
     return count
     
-def author_bow(author,corpus):
+def author_bow(author,corp):
     """for given author, builds a dictionary:
     keys: used words
     values: list of occurences in texts
@@ -90,9 +95,9 @@ def author_bow(author,corpus):
     """
 
     author_freqd={}
-    numb_texts=numberoftexts_cat(author,corpus)
+    numb_texts=numberoftexts_cat(author,corp)
     
-    for (text,cat) in corpus:
+    for (text,cat) in corp:
         if cat==author:
             freqd=Generate_BoW(text)
 
@@ -107,3 +112,9 @@ def author_bow(author,corpus):
         author_freqd[word]=weighed_occurence
 
     return author_freqd
+
+def getauthors(corp):
+    authors =[]
+    for (x,a) in corp:
+        authors.append(a)
+    return list(set(authors))

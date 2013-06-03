@@ -6,6 +6,7 @@ def features(fs, textU):
     Returns: Boolean
     """
     text = textU.lower()
+    
     if(fs=="f1"): # ----------------------first feature
         return (occurs_in_text("market",text) >0 )
         
@@ -51,5 +52,7 @@ def features(fs, textU):
     elif(fs=="f15"):# ----------------------second feature
         return (occurs_in_text("had",text) >3 )        
       
+
+            
         
         

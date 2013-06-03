@@ -1,8 +1,8 @@
 import pickle
 
-def corpus():
+def corpus(num):
     corpusfile = open('corpus.pkl','r')
     c = pickle.load(corpusfile)
     corpusfile.close()
-    return c
+    return c[0:(num*50)]
 

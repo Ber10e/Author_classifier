@@ -4,10 +4,9 @@ from help_functions import *
 from time import time
 import pickle
 
-
-authors=["AaronPressman","AlanCrosby","AlexanderSmith","BenjaminKangLim","BernardHickey"]
+corp=corpus(20)
+authors = getauthors(corp)
 features = ["f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13","f14","f15"]  
-corpus=corpus()
 
 def test():
     start = time()
@@ -19,8 +18,8 @@ def test():
     incorrect = 0
     runs = 0
     
-    for i in range(0,8):
-        data = split_train_test_data(authors, corpus,45)
+    for i in range(0,10):
+        data = split_train_test_data(authors, corp,49)
         testdata = data["test"]
         traindata = data["train"]
         trained_model = train(traindata, authors, features)
@@ -44,30 +43,13 @@ def test():
     print "percentage correct:" + str(float(totalcorrect)/runs)
     print "runtime: " + str(time()-start) + " seconds"
     
-    
-
-
 test()
 
-
-print "avg length:"
-print avglength(corpus)
 #print "\nAverage length of sentences per author:"
 #print SentenceLengths(corpus())
-"""
-def save_to_file(list,file):
-    f = open(file,'w')
-    for (x,y) in freqs:
-        f.write(x +"\t\t" +y + "\n")
-    f.close()
-freqs = []
-for a in authors:
-    print "\n" +a + ":" 
-    freqs += [("Author:\t\t",str(a))]
-    print_list(sorted(author_bow(a,corpus).items(), key=lambda x: x[1], reverse=True)[:20]) 
-    freqs+= [(str(x),str(y)) for (x,y) in (sorted(author_bow(a,corpus).items(), key=lambda x: x[1], reverse=True)[:20])]
-save_to_file(freqs,"freqs.txt")
-"""
+
+
+
 
  
     

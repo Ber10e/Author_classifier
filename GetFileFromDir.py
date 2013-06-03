@@ -7,22 +7,20 @@ from random import randint
 corpus=[] #Een lijst van tuples die een string (per nieuwsbericht/file) en een label van de auteur bevatten.
 
 # lijst gewenste auteurs
-authors=["AaronPressman","AlanCrosby","AlexanderSmith","BenjaminKangLim","BernardHickey"]
 
 def get_content(filename):
-	"""Read file and return contents as string
-	"""
-	f=open(filename,'r')
-	return f.read()
+    """Read file and return contents as string
+    """
+    f=open(filename,'r')
+    return f.read()
 
 for r,d,f in os.walk(".\C50train"):
-	try:
-		authorname=r.split('\\')[2]		#Alleen op het laagste niveau in de boom
-		for files in f:
-			if authorname in authors:
-				corpus.append((get_content(os.path.join(r,files)), authorname))
-	except:
-		pass
+    try:
+        authorname=r.split('\\')[2]		#Alleen op het laagste niveau in de boom
+        for files in f:
+            corpus.append((get_content(os.path.join(r,files)), authorname))
+    except:
+        pass
 
 #schrijft corpus naar bestand, als lijst tuples
 corpusfile = open('corpus.pkl','wb')
