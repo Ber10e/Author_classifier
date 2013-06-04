@@ -49,10 +49,13 @@ def testfeatures(features,corp):
     dict = compactcorpus(corp)
     print "------------"
     for f in features:
+        cat_feat_list=[]
         print "\n"
         print "P("+f+")=\t"+ str(p_feature(f,corp))
         for cat in dict.keys():
             print "P("+f+"|"+str(cat)+")=\t"+ str(p_feat_cat(f,cat,corp))
+            cat_feat_list.append(p_feat_cat(f,cat,corp))
+        print "variance"+"("+str(f)+")=\t\t"+ str(variance(cat_feat_list))
     print "------------"   
 
     

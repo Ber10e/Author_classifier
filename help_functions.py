@@ -128,3 +128,16 @@ def compactcorpus(corp):
         else:
             dict[c].append((t,c))
     return dict
+
+def variance(list):
+    n = 0
+    sum = 0
+    sum_sqr = 0
+ 
+    for x in list:
+        n = n + 1
+        sum = sum + x
+        sum_sqr = sum_sqr + x*x
+ 
+    variance = (sum_sqr - ((sum*sum)/n))/(n - 1)
+    return variance
