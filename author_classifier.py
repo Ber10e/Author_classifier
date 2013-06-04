@@ -4,7 +4,7 @@ from help_functions import *
 from time import time
 import pickle
 
-corp=corpus(5)
+corp=corpus(1)
 authors = getauthors(corp)
 features = ["f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13","f14","f15"]  
 
@@ -30,11 +30,11 @@ def test():
             if (classify(text[0],trained_model, features,authors,traindata)==text[1]):
                 correct[text[1]] +=1
                 runs +=1
-                print runs
+                
             else:
                 incorrect +=1
                 runs +=1
-                print runs
+        print runs       
     
     totalcorrect = 0
     for a in authors:
@@ -59,10 +59,12 @@ def testfeatures(features,corp):
     print "------------"   
 
     
-testfeatures(features,corp)
+#testfeatures(["f1","f11"],corp)
 #print "\nAverage length of sentences per author:"
 #print SentenceLengths(corpus())
 
+
+print bigramsdistr(corp[:50],20) # print de 20 meest voorkomende bigrammen van de eerste auteur (eerste 50 teksten)
 
 
 

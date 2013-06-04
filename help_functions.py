@@ -1,7 +1,8 @@
-from nltk import FreqDist
+from nltk import FreqDist,bigrams
 from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
 import random
 from getcorpus import corpus
+from operator import itemgetter
 
 
 
@@ -141,3 +142,9 @@ def variance(list):
  
     variance = (sum_sqr - ((sum*sum)/n))/(n - 1)
     return variance
+
+def bigramsdistr(corp,num):
+    bigrams0 = []
+    for (text,author) in corp:
+        bigrams0 += bigrams(word_tokenize(text.lower()))
+    return sorted(FreqDist(bigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
