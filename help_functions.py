@@ -148,3 +148,5 @@ def bigramsdistr(corp,num):
     for (text,author) in corp:
         bigrams0 += bigrams(word_tokenize(text.lower()))
     return sorted(FreqDist(bigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
+
+    

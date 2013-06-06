@@ -50,7 +50,9 @@ def features(fs, textU):
         return (occurs_in_text("said",text) >4 )
 
     elif(fs=="f15"):# ----------------------second feature
-        return (occurs_in_text("had",text) >3 )        
+        return (occurs_in_text("had",text) >3 )      
+    else:
+        return (fs(text))
       
 
             

@@ -6,8 +6,8 @@ import pickle
 
 corp=corpus(1)
 authors = getauthors(corp)
-features = ["f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13","f14","f15"]  
-
+features0 = ["f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13","f14","f15"]  
+features = ["f1",(lambda x:(occurs_in_text(".",x)>4))]
 
 def test():
     start = time()
@@ -44,7 +44,7 @@ def test():
     print "percentage correct:" + str(float(totalcorrect)/runs)
     print "runtime: " + str(time()-start) + " seconds"
     
-#test()
+test()
 def testfeatures(features,corp):
     dict = compactcorpus(corp)
     print "------------"
@@ -56,7 +56,7 @@ def testfeatures(features,corp):
             print "P("+f+"|"+str(cat)+")=\t"+ str(p_feat_cat(f,cat,corp))
             cat_feat_list.append(p_feat_cat(f,cat,corp))
         print "variance"+"("+str(f)+")=\t\t"+ str(variance(cat_feat_list))
-    print "------------"   
+    print "------------"
 
     
 #testfeatures(["f1","f11"],corp)
@@ -64,7 +64,7 @@ def testfeatures(features,corp):
 #print SentenceLengths(corpus())
 
 
-print bigramsdistr(corp[:50],20) # print de 20 meest voorkomende bigrammen van de eerste auteur (eerste 50 teksten)
+#print bigramsdistr(corp[:50],20) # print de 20 meest voorkomende bigrammen van de eerste auteur (eerste 50 teksten)
 
 
 
