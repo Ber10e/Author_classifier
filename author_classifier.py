@@ -76,7 +76,7 @@ def test_features2(features,num_authors,num_rounds):
     runs = 0
     
     for i in range(0,num_rounds):
-        data = split_train_test_data(authors, corp,49)
+        data = split_train_test_data(authors, corp,40)
         testdata = data["test"]
         traindata = data["train"]
         trained_model = train(traindata, authors, features)
@@ -89,7 +89,7 @@ def test_features2(features,num_authors,num_rounds):
             else:
                 incorrect +=1
                 runs +=1          
-    
+    print runs
     totalcorrect = 0
     for a in authors:
         totalcorrect += correct[a]
@@ -99,23 +99,29 @@ def pos_features():
     """
     Constructs a List of tuples of names and corresponding function
     """
-    minimal_wrd_occurence = [(("wrdoccurence:"+wrd+">"+str(num)),(lambda text: (occurs_in_text(wrd,text) >num ))) for wrd in ["internet","to", "by","at"] for num in range(0,10)]
+    minimal_wrd_occurence = [(("wrdoccurence:"+wrd+">"+str(num)),(lambda text: (occurs_in_text(wrd,text) >num ))) for wrd in ["internet"] for num in range(0,10)]
+    
     features = minimal_wrd_occurence
     return features
 
-def feature_selection(basefeatures,features,num_authors,num_rounds,num_selections):
+def feature_selection(filename,basefeatures,features,num_authors,num_rounds,num_selections):
     prec_dict = {}
     length = len(features) +1
     print "checking "+ str(length-1)+" features."
     for (name,f) in features:
         start = time()
         prec_dict[(name,f)] = test_features2((basefeatures+[f]),num_authors,num_rounds)
-        print name + str(prec_dict[(name,f)])
+        #print name + str(prec_dict[(name,f)])
         length = length - 1
         if((length % 5) ==0):
             print "Estimated time left:"+str(datetime.timedelta(seconds=(time()-start)*length))
     print "selection of "+str(num_selections)+ " has been made."
     selection = sorted(prec_dict.iteritems(), key=itemgetter(1), reverse=True)[:num_selections]
+    print "writing to file:" + filename
+    file = open(filename,'w')
+    for ((name,f),prec) in selection:
+        file.write("["+name +"]:" + str(prec) + "\n")
+    file.close()
     return selection
     
     
@@ -123,7 +129,7 @@ def feature_selection(basefeatures,features,num_authors,num_rounds,num_selection
     
 print "go:\n"
 
-print feature_selection([],pos_features(),5,1,10)
+print feature_selection("featuretest.txt",[],pos_features(),10,10,15)
 #test_features2(features,10,10)
 
 
