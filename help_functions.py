@@ -149,4 +149,26 @@ def bigramsdistr(corp,num):
         bigrams0 += bigrams(word_tokenize(text.lower()))
     return sorted(FreqDist(bigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
 
+def trigramsdistr(corp,num):
+    trigrams0 = []
+    for (text,author) in corp:
+        trigrams0 += trigrams(word_tokenize(text.lower()))
+    return sorted(FreqDist(trigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
+
+def bigrams_author(author,corp,num):
+    ccorp = compactcorpus(corp)
+    bigrams0 = []
     
+    for (text,cat) in ccorp[author]:
+        bigrams0 += bigrams(word_tokenize(text.lower()))
+
+    return sorted(FreqDist(bigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
+
+def trigrams_author(author,corp,num):
+    ccorp = compactcorpus(corp)
+    trigrams0 = []
+    
+    for (text,cat) in ccorp[author]:
+        trigrams0 += trigrams(word_tokenize(text.lower()))
+
+    return sorted(FreqDist(trigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
