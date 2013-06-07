@@ -6,7 +6,7 @@ import pickle
 import datetime
 from math import *
 
-corp=corpus(50)
+corp=corpus(5)
 print "corpus loaded..."
 authors = getauthors(corp)
 print "authors extracted..."
@@ -129,7 +129,7 @@ def feature_selection(filename,basefeatures,features,num_authors,num_rounds,num_
     
 print "go:\n"
 
-print feature_selection("featuretest.txt",[],pos_features(),10,10,15)
+#print feature_selection("featuretest.txt",[],pos_features(),10,10,15)
 #test_features2(features,10,10)
 
 
@@ -139,6 +139,8 @@ print feature_selection("featuretest.txt",[],pos_features(),10,10,15)
 
 
 #print bigramsdistr(corp[:50],20) # print de 20 meest voorkomende bigrammen van de eerste auteur (eerste 50 teksten)
+
+print trigrams_dict(authors,corp,1)
 
 
 

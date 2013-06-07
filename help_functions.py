@@ -1,4 +1,4 @@
-from nltk import FreqDist,bigrams
+from nltk import FreqDist,bigrams, trigrams
 from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
 import random
 from getcorpus import corpus
@@ -155,20 +155,30 @@ def trigramsdistr(corp,num):
         trigrams0 += trigrams(word_tokenize(text.lower()))
     return sorted(FreqDist(trigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
 
-def bigrams_author(author,corp,num):
-    ccorp = compactcorpus(corp)
+def bigrams_author(author,compcorp,num):
     bigrams0 = []
-    
-    for (text,cat) in ccorp[author]:
+    for (text,cat) in compcorp[author]:
         bigrams0 += bigrams(word_tokenize(text.lower()))
 
     return sorted(FreqDist(bigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
 
-def trigrams_author(author,corp,num):
-    ccorp = compactcorpus(corp)
+def trigrams_author(author,compcorp,num):
     trigrams0 = []
-    
-    for (text,cat) in ccorp[author]:
+    for (text,cat) in compcorp[author]:
         trigrams0 += trigrams(word_tokenize(text.lower()))
 
     return sorted(FreqDist(trigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
+
+def bigrams_dict(authors,corp,num):
+    compcorp = compactcorpus(corp)
+    dict={}
+    for author in authors:
+        dict[author] = bigrams_author(author,compcorp,num)
+    return dict 
+
+def trigrams_dict(authors,corp,num):
+    compcorp = compactcorpus(corp)
+    dict={}
+    for author in authors:
+        dict[author] = trigrams_author(author,compcorp,num)
+    return dict 
