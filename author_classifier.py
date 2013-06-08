@@ -2,16 +2,16 @@ from getcorpus import corpus
 from classifier import train,classify,p_feat_cat,p_feature
 from help_functions import *
 from time import time
+import operator
 import pickle
 import datetime
 from math import *
 
-corp=corpus(5)
+corp=corpus(10)
 print "corpus loaded..."
 authors = getauthors(corp)
 print "authors extracted..."
-features0 = ["f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13","f14","f15"]  
-features = ["f1",(lambda x:(occurs_in_text(".",x)>4))]
+features = ["f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13","f14","f15"]  
 
 def test():
     start = time()
@@ -46,7 +46,6 @@ def test():
     print "percentage correct:" + str(float(totalcorrect)/runs)
     print "runtime: " + str(time()-start) + " seconds"
     
-
 def testfeatures1(features,corp):
     """
     Calculates the P(feature), P(feature|category) for every category, and the variance.
@@ -97,14 +96,25 @@ def test_features2(features,num_authors,num_rounds):
 
 def pos_features():
     """
-    Constructs a List of tuples of names and corresponding function
+    Constructs a List of tuples of names and corresponding function (features)
     """
-    minimal_wrd_occurence = [(("wrdoccurence:"+wrd+">"+str(num)),(lambda text: (occurs_in_text(wrd,text) >num ))) for wrd in ["internet"] for num in range(0,10)]
+    trigrams = list(set([tri for (tri,num) in [x for sub in trigrams_dict(authors,corp,1).values() for x in sub]]))
+    wrds = list(set(['hi']))
     
-    features = minimal_wrd_occurence
+    minimal_trigram_occurence  =[(("trigramoccurence:"+str(tri)+">"+str(num)),(lambda text: (trigram_occurs_in_text(tri,text) >num ))) for tri in trigrams for num in range(0,4)]
+    #minimal_wrd_occurence = [(("wrdoccurence:"+wrd+">"+str(num)),(lambda text: (wrd_occurs_in_text(wrd,text) >num ))) for wrd in wrds for num in range(0,3)]
+    
+    features = minimal_trigram_occurence #+ minimal_wrd_occurence
     return features
 
 def feature_selection(filename,basefeatures,features,num_authors,num_rounds,num_selections):
+    """
+    test elke feature in een lijst van features (features), je kunt ook basefeatures toevoegen (deze worden niet getest, maar wel meegenomen).
+    Ook moet je een aantal auteurs meegeven waarop je wilt testen, het aantal 'testronden', en het aantal te selecteren features.
+    De features worden dan getest dmv testfeatures2, deze geeft een precision per feature, de hoogste n (n=num_selections) features worden naar het opgegeven bestand weggeschreven.
+    Args:(String,List of features, List of features(string/naam, function), Integer, Integer, Integer)
+    Returns: Ordered List of features + schrijft een textbestand
+    """
     prec_dict = {}
     length = len(features) +1
     print "checking "+ str(length-1)+" features."
@@ -129,7 +139,7 @@ def feature_selection(filename,basefeatures,features,num_authors,num_rounds,num_
     
 print "go:\n"
 
-#print feature_selection("featuretest.txt",[],pos_features(),10,10,15)
+print feature_selection("featuretest.txt",[],pos_features(),5,1,15)
 #test_features2(features,10,10)
 
 
@@ -139,11 +149,11 @@ print "go:\n"
 
 
 #print bigramsdistr(corp[:50],20) # print de 20 meest voorkomende bigrammen van de eerste auteur (eerste 50 teksten)
+"""
+tri = trigrams_dict(authors,corp,3)
+for a in tri.keys():
+    print "\n" +a + ":\n"
+    print_list(tri[a])
+"""
 
-print trigrams_dict(authors,corp,1)
-
-
-
- 
-    
     

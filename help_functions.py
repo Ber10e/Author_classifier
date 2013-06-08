@@ -37,9 +37,9 @@ def split_train_test_data(classes, corp, num_train):
     return {"test":test_texts,"train": train_texts} 
 
 def print_list(list):
-    """ prints a list"""
+    """ prints sorted frequency distributions"""
     for (x,y) in list:
-        print x + "\t\t" + str(y)
+        print str(x) + "\t\t" + str(y)
                
 def avglength(corp):
     count = 0
@@ -81,13 +81,22 @@ def numberoftexts_cat(author,texts):
             count +=1
     return count 
 
-def occurs_in_text(word,text):
+def wrd_occurs_in_text(word,text):
     """return the number of times the word occurs in the text"""
     count = 0
     for w in text.split():
         if(w==word):
             count +=1
     return count
+    
+def trigram_occurs_in_text(trigram,text):
+    """return the number of times the trigram occurs in the text"""
+    count = 0
+    textlist = word_tokenize(text.lower())
+    for i in range(0,len(textlist)-3):
+        if (textlist[i],textlist[i+1],textlist[i+2])==trigram:
+            count +=1
+    return count    
     
 def author_bow(author,corp):
     """for given author, builds a dictionary:
@@ -122,6 +131,9 @@ def getauthors(corp):
     return list(set(authors))
 
 def compactcorpus(corp):
+    """
+    maakt een dictionary{auteur:[(text,auteur)]}
+    """
     dict = {}
     for (t,c) in corp:
         if not(c in dict.keys()):
@@ -156,6 +168,9 @@ def trigramsdistr(corp,num):
     return sorted(FreqDist(trigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
 
 def bigrams_author(author,compcorp,num):
+    """
+    berekent gegeven een auteur en een compactcorpus (andere functie) een geordende lijst van tuples (bigram,aantal voorkomens) 
+    """
     bigrams0 = []
     for (text,cat) in compcorp[author]:
         bigrams0 += bigrams(word_tokenize(text.lower()))
