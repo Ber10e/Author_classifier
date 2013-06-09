@@ -1,5 +1,6 @@
 from nltk import FreqDist,bigrams, trigrams
 from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
+from nltk.corpus import stopwords
 import random
 from getcorpus import corpus
 from operator import itemgetter
@@ -196,4 +197,10 @@ def trigrams_dict(authors,corp,num):
     dict={}
     for author in authors:
         dict[author] = trigrams_author(author,compcorp,num)
-    return dict 
+    return dict
+
+def remove_stopwords(list):
+   """  filters english stopwords out of a list
+        args: list
+        returns: list not containing stopwords"""
+   return([word for word in list if word not in stopwords.words('english')])
