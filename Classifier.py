@@ -28,7 +28,6 @@ def classify(text, trained_model, features1, categories,tr_texts):
     result = "false" #random.choice(categories)
     max_score = 0
     for c in categories:
-        print c + " \t:" + str(score_cat[c])
         if (score_cat[c]>max_score):
             result = c
             max_score = score_cat[c]
