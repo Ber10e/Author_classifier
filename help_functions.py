@@ -228,3 +228,13 @@ def remove_stopwords(list):
         args: list
         returns: list not containing stopwords"""
    return([word for word in list if word not in stopwords.words('english')])
+   
+def lemmatizer(text):
+    """lemmatizes all words.
+	arg: text
+	returns: lemmatized words where possibel.
+	"""
+	lmtzr = WordNetLemmatizer()
+	for word in text:
+		y = lmtzr.lemmatize(word,'v')
+		return y
