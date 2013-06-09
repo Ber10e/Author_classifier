@@ -7,6 +7,7 @@ import pickle
 import datetime
 from math import *
 
+
 corp=corpus(50)
 compactcorpus = compactcorpus(corp)
 authors = compactcorpus.keys()
@@ -74,7 +75,7 @@ def pos_features():
     """
     Constructs a List of tuples of names and corresponding function (features)
     """
-    trigrams = list(set([tri for (tri,num) in [x for sub in trigrams_dict(authors,corp,3).values() for x in sub]]))
+    trigrams = list(set([tri for (tri,num) in [x for sub in trigrams_dict(authors,corp,5).values()[3:] for x in sub]]))
     wrds = list(set(['internet']))
     minimal_wrdoccurence = ["wrd:"+wrd+">"+str(num) for wrd in wrds for num in range(0,1)]
     minimal_trigram_occurence = ["tri:("+str(tri[0])+","+str(tri[1])+","+str(tri[2])+")>"+str(num) for tri in trigrams for num in range(0,1)]
@@ -120,7 +121,12 @@ print "------------"
 
 #print feature_selection("trigram_feature_selection_all.txt",chosenfeatures,pos_features(),1,4)
 
-print test_features2(pos_features(),2)
+
+print "build classifier"
+classifier1 = (chosenfeatures, train(corp,authors,pos_features()))
+print "write to file..."
+writetofile(classifier1,"classifier1.c")
+#print test_features2(pos_features(),2)
 #print test_features2(pos_features(),4)
 
 

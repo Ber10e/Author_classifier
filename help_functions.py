@@ -2,6 +2,7 @@ from nltk import FreqDist,bigrams, trigrams
 from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 import random
+import pickle
 from getcorpus import corpus
 from operator import itemgetter
 
@@ -50,6 +51,15 @@ def avglength(corp):
         number += 1
     return float(count) / number
     
+def writetofile(struct,file):
+    f = open(file,'wb')
+    pickle.dump(struct,f)
+    f.close
+def getfromfile(file):
+    f = open(file,'rb')
+    struct = pickle.load(f)
+    f.close
+    return struct
 def SentenceLengths(corp):
     AverageLengths={}
     
