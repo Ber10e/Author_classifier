@@ -143,7 +143,13 @@ def author_bow(author,corp):
         author_freqd[word]=weighed_occurence
 
     return author_freqd
-
+def common_but_unique(dict,uniqueness):
+    pile = []
+    for a in dict.keys():
+        pile +=[x[0] for x in dict[a]]
+    fdist = sorted(FreqDist(pile).iteritems(), key=itemgetter(1), reverse=False)
+    return [feat for (feat,x) in fdist if x<uniqueness]
+    
 def getauthors(corp):
     authors =[]
     for (x,a) in corp:
@@ -178,7 +184,7 @@ def variance(list):
 def wrddistr_author(author,corp,num):
     comp = compactcorpus(corp)
     
-    sorted(FreqDist(bigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
+    sorted(FreqDist(wrds).iteritems(), key=itemgetter(1), reverse=True) [:num]
     
 def bigramsdistr(corp,num):
     bigrams0 = []
@@ -222,7 +228,7 @@ def trigrams_dict(authors,corp,num):
     for author in authors:
         dict[author] = trigrams_author(author,compcorp,num)
     return dict
-
+    
 def remove_stopwords(list):
    """  filters english stopwords out of a list
         args: list

@@ -6,12 +6,12 @@ import operator
 import pickle
 import datetime
 from math import *
+import winsound
 
 
 corp=corpus(50)
 compactcorpus = compactcorpus(corp)
 authors = compactcorpus.keys()
-chosenfeatures = []
 featureset1 = [  "tri:('',he,said)>0",
                     "tri:(,,'',said)>0",
                     "tri:(,,'',he)>0",
@@ -57,8 +57,10 @@ def test_features2(features,num_rounds,file):
             print "model trained in:" + str(time()-start) + "seconds"
         else:
             trained_model = getfromfile(file)[1]
+            writetofile((features,trained_model),"classifier2.c")
             print "trained model extracted from" + file
-            print "number of runs:"+str(len(testdata))
+        print "number of runs:"+str(len(testdata))
+        winsound.Beep(2000,500)
         for j in range(0,len(testdata)):
             start=time()
             if (classify(testdata[j][0],trained_model, features,authors,traindata)==testdata[j][1]):
@@ -75,13 +77,18 @@ def test_features2(features,num_rounds,file):
 
 def pos_features():
     """
-    Constructs a List of tuples of names and corresponding function (features)
+    Constructs a List of features (strings)
     """
-    trigrams = list(set([tri for (tri,num) in [x for sub in trigrams_dict(authors,corp,5).values()[3:] for x in sub]]))
+    #trigrams = list(set([tri for (tri,num) in [x for sub in trigrams_dict(authors,corp,3).values() for x in sub]]))
+    bigrams = common_but_unique(bigrams_dict(authors,corp,4),2)
+    trigrams = common_but_unique(trigrams_dict(authors,corp,4),2)
+
     wrds = list(set())
     minimal_wrdoccurence = ["wrd:"+wrd+">"+str(num) for wrd in wrds for num in range(0,1)]
     minimal_trigram_occurence = ["tri:("+str(tri[0])+","+str(tri[1])+","+str(tri[2])+")>"+str(num) for tri in trigrams for num in range(0,1)]
-    features = minimal_trigram_occurence #+ minimal_word_occurence
+    minimal_bigram_occurence = ["bi:("+str(bi[0])+","+str(bi[1])+")>"+str(num) for bi in bigrams for num in range(0,1)]
+
+    features = minimal_trigram_occurence + minimal_bigram_occurence
     return features
 
 
@@ -114,9 +121,8 @@ def feature_selection(filename,basefeatures,features,num_rounds,num_selections):
     
     
     
-print "go:\n"
+print "go:"
 print "aantal authors:"+str(len(authors))
-
 print "------------"
 
 
@@ -130,8 +136,10 @@ print "------------"
 #writetofile(classifier1,"classifier1.c")
 #print test_features2(pos_features(),2)
 #print test_features2(pos_features(),4)
-
-
+pos = pos_features()
+print "features loaded"
+print test_features2(pos,1,"")
+winsound.Beep(2500,1000)
 """ 
 tm=getfromfile("classifier1.c")[1]
 fts =getfromfile("classifier1.c")[0]
@@ -144,11 +152,8 @@ print "duration*100>>>" + str((time()-start)*100)
 #print SentenceLengths(corpus())
 
 #print bigramsdistr(corp[:50],20) # print de 20 meest voorkomende bigrammen van de eerste auteur (eerste 50 teksten)
-"""
-tri = trigrams_dict(authors,corp,3)
-for a in tri.keys():
-    print "\n" +a + ":\n"
-    print_list(tri[a])
-"""
+
+
+
 
     

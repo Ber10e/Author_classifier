@@ -49,9 +49,7 @@ def train(tr_texts,categories,features):
     Args:List of Strings (tr-texts), List of Strings (categories), List of Strings (features)
     Returns:Tuple of Dictionaries (dict{feature:p_feature},dict{cat:{feature:p_feature_cat}})
     """
-    p_features1 = p_features(features,tr_texts)
-    p_features_cat1 =  p_features_cat(features,categories,tr_texts)
-    return (p_features1,p_features_cat1)
+    return (p_features(features,tr_texts),p_features_cat(features,categories,tr_texts))
     
 def p_features_cat(features, categories, tr_texts):
     """ Calculates the propabilities of a list of features in a the given categories, based on the traintexts.
