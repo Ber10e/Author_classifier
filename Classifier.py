@@ -87,7 +87,7 @@ def p_feature(f, trainingsteksten):
     for (tekst,cat) in trainingsteksten:
         if(features(f,tekst)):
             voorkomens += 1
-    return float(voorkomens)/float(len(trainingsteksten))
+    return float(voorkomens)/len(trainingsteksten)
     
 def p_features(features, tr_teksten):
     """ Calculates the propability of features to appear in a text, based on a list of traintexts

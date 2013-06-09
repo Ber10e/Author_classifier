@@ -1,56 +1,32 @@
 from help_functions import *
+import re
 print "features imported"
+
+wordoccur = re.compile(r"^wrd:(.+)>(.+)$")
+trioccur = re.compile(r"^tri:\((.+),(.+),(.+)\)>(.+)$")
+
+"""
+features zijn strings van de vormen:
+wrd:hallo>1
+of
+tri:(the,man,said)>2
+"""
+
+
 def features(fs, textU):
     """ Calculates if a features is applicable to a text.
     Args:String (featurename), String (text)
     Returns: Boolean
     """
     text = textU.lower()
-    
-    if(fs=="f1"): # ----------------------first feature
-        return (occurs_in_text(".",text) >0 )
-        
-    elif(fs=="f2"):# ----------------------second feature
-        return (occurs_in_text(",",text) >0 )
-        
-    elif (fs=="f3"):# ----------------------third feature
-        return (occurs_in_text("china",text) >0 )
-        
-    elif(fs=="f4"):# ----------------------second feature
-        return (occurs_in_text("bank",text) >0 )
-        
-    elif(fs=="f5"):# ----------------------second feature
-        return (occurs_in_text("british",text) >0 )
-        
-    elif(fs=="f6"):# ----------------------second feature
-        return (occurs_in_text("prague",text) >0 )
-        
-    elif(fs=="f7"):# ----------------------second feature
-        return (occurs_in_text("wang",text) >0 )
-        
-    elif(fs=="f8"):# ----------------------second feature
-        return (occurs_in_text("beijing",text) >0 )
-        
-    elif(fs=="f9"):# ----------------------second feature
-        return (occurs_in_text("million",text) >0 )
+    if(not(re.search(wordoccur,fs)==None)): # ----------------------word occurence features
+        m = re.search(wordoccur,fs)
+        return (wrd_occurs_in_text(m.groups()[0],text) >int(m.groups()[1]) )
+    elif(not(re.search(trioccur,fs)==None)):
+        m = m = re.search(trioccur,fs)
+        tuple =(m.groups()[0],m.groups()[1],m.groups()[2])
+        return (trigram_occurs_in_text(tuple,text) >int(m.groups()[3]) )
 
-    elif(fs=="f10"):# ----------------------second feature
-        return (occurs_in_text("australia",text) >0 )
-
-    elif(fs=="f11"):# ----------------------second feature
-        return (occurs_in_text("to",text) >13 )
-
-    elif(fs=="f12"):# ----------------------second feature
-        return (occurs_in_text("was",text) >3 )
-
-    elif(fs=="f13"):# ----------------------second feature
-        return (occurs_in_text("by",text) >3 )
-
-    elif(fs=="f14"):# ----------------------second feature
-        return (occurs_in_text("said",text) >4 )
-
-    elif(fs=="f15"):# ----------------------second feature
-        return (occurs_in_text("had",text) >3 )      
     else:
         return (fs(text))
       
