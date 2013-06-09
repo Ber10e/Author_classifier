@@ -5,7 +5,7 @@ Tuur
 Erlinde
 Jelte
 """
-
+import random
 from features import features
 print "classifier imported"
 
@@ -23,11 +23,12 @@ def classify(text, trained_model, features1, categories,tr_texts):
         for f in features1:
             if(features(f,text)):
                 noemer = noemer * trained_model[1][c][f]
-                teller = teller * trained_model[0][f]
+                teller = teller * trained_model[0][f] + 0.0000001
         score_cat[c] = float(noemer)/teller
-    result = "false"
-    max_score = (1.0/len(categories))
+    result = "false" #random.choice(categories)
+    max_score = 0
     for c in categories:
+        print c + " \t:" + str(score_cat[c])
         if (score_cat[c]>max_score):
             result = c
             max_score = score_cat[c]

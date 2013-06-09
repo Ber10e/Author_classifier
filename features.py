@@ -8,10 +8,10 @@ def features(fs, textU):
     text = textU.lower()
     
     if(fs=="f1"): # ----------------------first feature
-        return (occurs_in_text("market",text) >0 )
+        return (occurs_in_text(".",text) >0 )
         
     elif(fs=="f2"):# ----------------------second feature
-        return (occurs_in_text("internet",text) >0 )
+        return (occurs_in_text(",",text) >0 )
         
     elif (fs=="f3"):# ----------------------third feature
         return (occurs_in_text("china",text) >0 )
