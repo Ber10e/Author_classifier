@@ -12,7 +12,7 @@ corp=corpus(50)
 compactcorpus = compactcorpus(corp)
 authors = compactcorpus.keys()
 chosenfeatures = []
-chosenfeatures1 = [  "tri:('',he,said)>0",
+featureset1 = [  "tri:('',he,said)>0",
                     "tri:(,,'',said)>0",
                     "tri:(,,'',he)>0",
                     "tri:(,,'',said)>0",
@@ -36,34 +36,36 @@ def test_features1(features):
         print "variance"+"("+str(f)+")=\t\t"+ str(variance(cat_feat_list))
     print "------------"   
 
-def test_features2(features,num_rounds):
+def test_features2(features,num_rounds,file):
     """
     Tests the classifier on a set of features, returning it's precision
     """
-
     correct = {}
     for a in authors:
         correct[a]=0
-    incorrect = 0
     runs = 0
     print "aantal features:" + str(len(features))
     print "testfeature:"+ str(features)
-
     for i in range(0,num_rounds):
+        
         start = time()
         data = split_train_test_data(authors, corp,45)
         testdata = data["test"]
         traindata = data["train"]
-        trained_model = train(traindata, authors, features)
-        print "model trained in:" + str(time()-start) + "seconds"
+        if(file==""):
+            trained_model = train(traindata, authors, features)
+            print "model trained in:" + str(time()-start) + "seconds"
+        else:
+            trained_model = getfromfile(file)[1]
+            print "trained model extracted from" + file
+            print "number of runs:"+str(len(testdata))
         for j in range(0,len(testdata)):
-            text = testdata[j]
-            if (classify(text[0],trained_model, features,authors,traindata)==text[1]):
-                correct[text[1]] +=1
+            start=time()
+            if (classify(testdata[j][0],trained_model, features,authors,traindata)==testdata[j][1]):
+                correct[testdata[j][1]] +=1
                 runs +=1
             else:
-                incorrect +=1
-                runs +=1    
+                runs +=1
     print "runs:"+str(runs)
     totalcorrect = 0
     for a in authors:
@@ -76,7 +78,7 @@ def pos_features():
     Constructs a List of tuples of names and corresponding function (features)
     """
     trigrams = list(set([tri for (tri,num) in [x for sub in trigrams_dict(authors,corp,5).values()[3:] for x in sub]]))
-    wrds = list(set(['internet']))
+    wrds = list(set())
     minimal_wrdoccurence = ["wrd:"+wrd+">"+str(num) for wrd in wrds for num in range(0,1)]
     minimal_trigram_occurence = ["tri:("+str(tri[0])+","+str(tri[1])+","+str(tri[2])+")>"+str(num) for tri in trigrams for num in range(0,1)]
     features = minimal_trigram_occurence #+ minimal_word_occurence
@@ -96,7 +98,7 @@ def feature_selection(filename,basefeatures,features,num_rounds,num_selections):
     print "feature selection on: "+ str(length)+" features."
     for f in features:
         start = time()
-        prec_dict[f] = test_features2((basefeatures+[f]),num_rounds)
+        prec_dict[f] = test_features2((basefeatures+[f]),num_rounds,"")
         length = length - 1
         if((length % 5) ==0):
             print "Estimated time left:"+str(datetime.timedelta(seconds=(time()-start)*length))
@@ -122,14 +124,21 @@ print "------------"
 #print feature_selection("trigram_feature_selection_all.txt",chosenfeatures,pos_features(),1,4)
 
 
-print "build classifier"
-classifier1 = (chosenfeatures, train(corp,authors,pos_features()))
-print "write to file..."
-writetofile(classifier1,"classifier1.c")
+#print "build classifier"
+#classifier1 = (chosenfeatures, train(corp,authors,pos_features()))
+#print "write to file..."
+#writetofile(classifier1,"classifier1.c")
 #print test_features2(pos_features(),2)
 #print test_features2(pos_features(),4)
 
 
+""" 
+tm=getfromfile("classifier1.c")[1]
+fts =getfromfile("classifier1.c")[0]
+start = time()
+classify(corp[0][0],tm,fts, authors,corp)
+print "duration*100>>>" + str((time()-start)*100)
+"""
 
 #print "\nAverage length of sentences per author:"
 #print SentenceLengths(corpus())

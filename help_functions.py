@@ -100,6 +100,15 @@ def wrd_occurs_in_text(word,text):
             count +=1
     return count
     
+def bigram_occurs_in_text(bigram,text):
+    """return the number of times the bigram occurs in the text"""
+    count = 0
+    textlist = word_tokenize(text.lower())
+    for i in range(0,len(textlist)-2):
+        if (textlist[i],textlist[i+1])==bigram:
+            count +=1
+    return count 
+    
 def trigram_occurs_in_text(trigram,text):
     """return the number of times the trigram occurs in the text"""
     count = 0
@@ -166,6 +175,11 @@ def variance(list):
     variance = (sum_sqr - ((sum*sum)/n))/(n - 1)
     return variance
 
+def wrddistr_author(author,corp,num):
+    comp = compactcorpus(corp)
+    
+    sorted(FreqDist(bigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
+    
 def bigramsdistr(corp,num):
     bigrams0 = []
     for (text,author) in corp:
