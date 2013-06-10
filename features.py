@@ -17,6 +17,7 @@ tri:(the,man,said)>2
 """
 
 
+
 def features(fs, textU):
     """ Calculates if a features is applicable to a text.
     Args:String (featurename), String (text)

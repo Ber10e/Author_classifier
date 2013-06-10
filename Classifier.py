@@ -49,7 +49,19 @@ def train(tr_texts,categories,features):
     Args:List of Strings (tr-texts), List of Strings (categories), List of Strings (features)
     Returns:Tuple of Dictionaries (dict{feature:p_feature},dict{cat:{feature:p_feature_cat}})
     """
+    compact corp
+    
+    for f in features:
+        bereken algemene kans
+        bereken cat kans
+    
     return (p_features(features,tr_texts),p_features_cat(features,categories,tr_texts))
+    
+def p_feat_p_feat_cat(feature,compact,categories):
+    for c in categories:
+        kansen[c]={}
+    
+
     
 def p_features_cat(features, categories, tr_texts):
     """ Calculates the propabilities of a list of features in a the given categories, based on the traintexts.
@@ -69,12 +81,8 @@ def p_feat_cat(feature,cat,tr_texts):
     """ Calculates the propability of a feature given a category, based on the traintexts.
     Args: String(feature), String(category), List of Tuples (String,String) (traintexts (text,cat))
     Returns: Float
-    """
-    tr_texts_cat = []
-    for (text,c) in tr_texts:
-        if(c==cat):
-            tr_texts_cat+=[(text,c)]
-    return p_feature(feature,tr_texts_cat)
+    """     
+    return p_feature(feature,[(text,c) for (text,c) in tr_texts if c==cat])
 
 def p_feature(f, trainingsteksten):
     """ Calculates the propability of a feature, based on a list of traintexts

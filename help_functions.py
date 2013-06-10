@@ -5,6 +5,7 @@ import random
 import pickle
 from getcorpus import corpus
 from operator import itemgetter
+import csv
 
 
 
@@ -80,8 +81,8 @@ def SentenceLengths(corp):
 
 def save_list_to_file(list,file):
     f = open(file,'w')
-    for (x,y) in freqs:
-        f.write(x +"\t\t" +y + "\n")
+    for x in list:
+        f.write(str(x) + "\n")
     f.close()
     
 def numberoftexts_cat(author,texts):
@@ -181,11 +182,7 @@ def variance(list):
     variance = (sum_sqr - ((sum*sum)/n))/(n - 1)
     return variance
 
-def wrddistr_author(author,corp,num):
-    comp = compactcorpus(corp)
-    
-    sorted(FreqDist(wrds).iteritems(), key=itemgetter(1), reverse=True) [:num]
-    
+   
 def bigramsdistr(corp,num):
     bigrams0 = []
     for (text,author) in corp:
@@ -209,6 +206,8 @@ def bigrams_author(author,compcorp,num):
     return sorted(FreqDist(bigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
 
 def trigrams_author(author,compcorp,num):
+    """
+    """
     trigrams0 = []
     for (text,cat) in compcorp[author]:
         trigrams0 += trigrams(word_tokenize(text.lower()))
@@ -216,6 +215,10 @@ def trigrams_author(author,compcorp,num):
     return sorted(FreqDist(trigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
 
 def bigrams_dict(authors,corp,num):
+    """builds a dictionary of num most frequent bigrams in the corpus per author
+    args: list of strings, list of tuples (string,string), int
+    returns dictionary{string:[(bigram,string)]}
+    """
     compcorp = compactcorpus(corp)
     dict={}
     for author in authors:
@@ -223,6 +226,10 @@ def bigrams_dict(authors,corp,num):
     return dict 
 
 def trigrams_dict(authors,corp,num):
+    """builds a dictionary of num most frequent trigrams in the corpus per author
+    args: list of strings, list of tuples (string,string), int
+    returns dictionary{string:[(trigram,string)]}
+    """
     compcorp = compactcorpus(corp)
     dict={}
     for author in authors:
@@ -237,10 +244,10 @@ def remove_stopwords(list):
    
 def lemmatizer(text):
     """lemmatizes all words.
-	arg: text
-	returns: lemmatized words where possibel.
-	"""
-	lmtzr = WordNetLemmatizer()
-	for word in text:
-		y = lmtzr.lemmatize(word,'v')
-		return y
+    arg: text
+    returns: lemmatized words where possible.
+    """
+    lmtzr = WordNetLemmatizer()
+    for word in text:
+        y = lmtzr.lemmatize(word,'v')
+        return y
