@@ -12,7 +12,7 @@ from math import *
 import winsound
 
 
-corp=corpus(5)
+corp=corpus(50)
 compactcorpus = compactcorpus(corp)
 authors = compactcorpus.keys()
 
@@ -28,8 +28,7 @@ def pos_features():
     Hier staan alle features die op dit moment gebruikt 
     """
     start=time()
-    #bigrams = common_but_unique(bigrams_dict(authors,corp,20),3)
-    #trigrams = common_but_unique(trigrams_dict(authors,corp,20),3)
+    
     wrds = common_but_unique(ngrams_dict(1,authors,compactcorpus,25,False),3)
     bigrams = common_but_unique(ngrams_dict(2,authors,compactcorpus,25,False),3)
     trigrams = common_but_unique(ngrams_dict(3,authors,compactcorpus,25,False),3)
@@ -67,11 +66,10 @@ def classifynltk():
     print "written to file"
     test_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["test"]]
     print "test set build"
-    for f in range(0,3000)[:50:]:
-        zelda()
     classifier1 = NaiveBayesClassifier.train(train_set)
     print "classifier build"
     print nltk.classify.accuracy(classifier1,test_set)
+    zelda()
     
 
 
