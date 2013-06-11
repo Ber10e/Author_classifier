@@ -18,9 +18,8 @@ def corpus_train():
     corpusfile.close()
     c1 = []
     for (text,author) in c:
+        text = re.sub("&amp;","&",text)
         c1 += [(re.sub(r"(?<=[a-z])\.",r" .",text),author)] # leest punten als apparte 'woorden' als ze aan het eind v. een zin staan (niet in afkortingen met hoofdletters)
-    # deze replace maakt om de een of ander vage reden dat er te weinig auteurs worden ingelezen
-    #   	c1 += [(re.sub(r"&amp;",r"and",text),author)]
     return c1
     
 def corpus_dev():
@@ -29,7 +28,6 @@ def corpus_dev():
     corpusfile.close()
     c1 = []
     for (text,author) in c:
+        text = re.sub("&amp;","&",text)
         c1 += [(re.sub(r"(?<=[a-z])\.",r" .",text),author)] # leest punten als apparte 'woorden' als ze aan het eind v. een zin staan (niet in afkortingen met hoofdletters)
-    # deze replace maakt om de een of ander vage reden dat er te weinig auteurs worden ingelezen
-    #   	c1 += [(re.sub(r"&amp;",r"and",text),author)]
     return c1

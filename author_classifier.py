@@ -12,7 +12,7 @@ from math import *
 import winsound
 
 
-corp=corpus(50)
+corp=corpus(5)
 compactcorpus = compactcorpus(corp)
 authors = compactcorpus.keys()
 
@@ -28,8 +28,11 @@ def pos_features():
     Hier staan alle features die op dit moment gebruikt 
     """
     start=time()
-    bigrams = common_but_unique(bigrams_dict(authors,corp,20),3)
-    trigrams = common_but_unique(trigrams_dict(authors,corp,20),3)
+    #bigrams = common_but_unique(bigrams_dict(authors,corp,20),3)
+    #trigrams = common_but_unique(trigrams_dict(authors,corp,20),3)
+
+    bigrams = common_but_unique(ngrams_dict(2,authors,compactcorpus,20,False),3)
+    trigrams = common_but_unique(ngrams_dict(3,authors,compactcorpus,20,False),3)
 
     wrds = list(set())
     minimal_wrdoccurence = ["wrd:"+wrd+">"+str(num) for wrd in wrds for num in range(0,1)]

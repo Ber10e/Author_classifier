@@ -1,4 +1,4 @@
-from nltk import FreqDist,bigrams, trigrams
+from nltk import FreqDist,bigrams, trigrams, ngrams
 from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 import random
@@ -61,23 +61,27 @@ def getfromfile(file):
     struct = pickle.load(f)
     f.close
     return struct
-def SentenceLengths(corp):
-    AverageLengths={}
-    
-    
-    for (text,cat) in corp:
-        AverageLengths[cat]=[]
-    
-    for (text,cat) in corp:
-       sentences=[len(word_tokenize(t)) for t in sent_tokenize(text)]
-       sentence_length_text = sum(sentences) / float(len(sentences))
-       AverageLengths[cat].append(sentence_length_text)
-      
-    for cat in AverageLengths.keys():
-        average_sentence_cat = sum(AverageLengths[cat])/float(len(AverageLengths[cat]))
-        AverageLengths[cat] = average_sentence_cat
-    
-    return AverageLengths
+
+def lengths(authors,corp):
+    ccorp = compactcorpus(corp)
+    lengths0={}
+
+    for author in authors:
+        concattext = ''
+        for (text,cat) in ccorp[author]:
+            concattext += text
+        
+        sentencelengths = [len(word_tokenize(t)) for t in sent_tokenize(concattext)]
+        average_sentence = sum(sentencelengths)/float(len(sentencelengths))
+        lengths0[author]=[average_sentence]
+
+        wordlengths = [len(word) for word in word_tokenize(concattext)]
+        average_word = sum(wordlengths)/float(len(wordlengths))
+        lengths0[author].append(average_word)
+
+        #print "\n"+author+"\n==============\n"+str(average_sentence)+"\n"+str(average_word)
+
+    return lengths0
 
 def save_list_to_file(list,file):
     f = open(file,'w')
@@ -119,31 +123,6 @@ def trigram_occurs_in_text(trigram,text):
             count +=1
     return count    
     
-def author_bow(author,corp):
-    """for given author, builds a dictionary:
-    keys: used words
-    values: list of occurences in texts
-    then calculates the weighed occurence of all words (number of times that word is used in one text)
-    """
-
-    author_freqd={}
-    numb_texts=numberoftexts_cat(author,corp)
-    
-    for (text,cat) in corp:
-        if cat==author:
-            freqd=Generate_BoW(text)
-
-            for word in freqd.keys():
-                if word in author_freqd.keys():
-                    author_freqd[word].append(freqd[word])
-                else:
-                    author_freqd[word]=[freqd[word]]
-    
-    for word in author_freqd.keys():
-        weighed_occurence=float(sum(author_freqd[word]))/numb_texts
-        author_freqd[word]=weighed_occurence
-
-    return author_freqd
 def common_but_unique(dict,uniqueness):
     pile = []
     for a in dict.keys():
@@ -183,57 +162,43 @@ def variance(list):
     return variance
 
    
-def bigramsdistr(corp,num):
-    bigrams0 = []
-    for (text,author) in corp:
-        bigrams0 += bigrams(word_tokenize(text.lower()))
-    return sorted(FreqDist(bigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
+def ngrams_author(n,author,compcorp,num,removestopwords):
+    """ finds top n-grams for one author
+    args: n for n-grams, author, compacted corpus, number top n-grams,boolean(removestopwords)
+    returns: frequency distribution of n-grams for given author"""
+    ngrams0=[]
+    
+    if n==1:
+        for (text,cat) in compcorp[author]:
+            if removestopwords:
+                ngrams0 += remove_stopwords(word_tokenize(text.lower()))
+            else:
+                ngrams0 += word_tokenize(text.lower())
+    
+    else:
+        for (text,cat) in compcorp[author]:
+            if removestopwords:
+                ngrams0 += ngrams(remove_stopwords(word_tokenize(text.lower())),n)
+            else:
+                ngrams0 += ngrams(word_tokenize(text.lower()),n)
 
-def trigramsdistr(corp,num):
-    trigrams0 = []
-    for (text,author) in corp:
-        trigrams0 += trigrams(word_tokenize(text.lower()))
-    return sorted(FreqDist(trigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
+    return sorted(FreqDist(ngrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
 
-def bigrams_author(author,compcorp,num):
-    """
-    berekent gegeven een auteur en een compactcorpus (andere functie) een geordende lijst van tuples (bigram,aantal voorkomens) 
-    """
-    bigrams0 = []
-    for (text,cat) in compcorp[author]:
-        bigrams0 += bigrams(word_tokenize(text.lower()))
 
-    return sorted(FreqDist(bigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
-
-def trigrams_author(author,compcorp,num):
-    """
-    """
-    trigrams0 = []
-    for (text,cat) in compcorp[author]:
-        trigrams0 += trigrams(word_tokenize(text.lower()))
-
-    return sorted(FreqDist(trigrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
-
-def bigrams_dict(authors,corp,num):
-    """builds a dictionary of num most frequent bigrams in the corpus per author
-    args: list of strings, list of tuples (string,string), int
-    returns dictionary{string:[(bigram,string)]}
-    """
-    compcorp = compactcorpus(corp)
+def ngrams_dict(n,authors,compcorp,num,removestopwords):
+    """ finds top n-grams for all authors
+    args: n for n-grams,list of authors,corpus,number top n-grams,boolean(removestopwords)
+    returns: dictionary {author: [(ngram,occurence)]}"""
+    #compcorp = compactcorpus(corp)
     dict={}
+    
     for author in authors:
-        dict[author] = bigrams_author(author,compcorp,num)
-    return dict 
+        if removestopwords:
+            dict[author] = ngrams_author(n,author,compcorp,num,True)
 
-def trigrams_dict(authors,corp,num):
-    """builds a dictionary of num most frequent trigrams in the corpus per author
-    args: list of strings, list of tuples (string,string), int
-    returns dictionary{string:[(trigram,string)]}
-    """
-    compcorp = compactcorpus(corp)
-    dict={}
-    for author in authors:
-        dict[author] = trigrams_author(author,compcorp,num)
+        else:
+            dict[author] = ngrams_author(n,author,compcorp,num,False)
+    
     return dict
     
 def remove_stopwords(list):
