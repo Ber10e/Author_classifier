@@ -2,7 +2,7 @@ from getcorpus import corpus
 from classifier import train,p_feat_cat,p_feature
 from features import *
 from help_functions import *
-from time import time
+import time
 from nltk import NaiveBayesClassifier
 import nltk
 import operator
@@ -30,16 +30,15 @@ def pos_features():
     start=time()
     #bigrams = common_but_unique(bigrams_dict(authors,corp,20),3)
     #trigrams = common_but_unique(trigrams_dict(authors,corp,20),3)
+    wrds = common_but_unique(ngrams_dict(1,authors,compactcorpus,25,False),3)
+    bigrams = common_but_unique(ngrams_dict(2,authors,compactcorpus,25,False),3)
+    trigrams = common_but_unique(ngrams_dict(3,authors,compactcorpus,25,False),3)
 
-    bigrams = common_but_unique(ngrams_dict(2,authors,compactcorpus,20,False),3)
-    trigrams = common_but_unique(ngrams_dict(3,authors,compactcorpus,20,False),3)
-
-    wrds = list(set())
     minimal_wrdoccurence = ["wrd:"+wrd+">"+str(num) for wrd in wrds for num in range(0,1)]
     minimal_trigram_occurence = ["tri:("+str(tri[0])+","+str(tri[1])+","+str(tri[2])+")>"+str(num) for tri in trigrams for num in range(0,1)]
     minimal_bigram_occurence = ["bi:("+str(bi[0])+","+str(bi[1])+")>"+str(num) for bi in bigrams for num in range(0,1)]
 
-    features = minimal_trigram_occurence + minimal_bigram_occurence
+    features = minimal_trigram_occurence + minimal_bigram_occurence +  minimal_wrdoccurence
     print "pos feat in:"+str(time()-start)
     return features
     
@@ -57,7 +56,7 @@ def feat_dict(pos_feat,text):
 def classifynltk():
     pos_feat = pos_features()
     print "aantal features:"+str(len(pos_feat))
-    winsound.Beep(2000,2000)
+    winsound.Beep(1500,1000)
     data = split_train_test_data(authors, corp,45)
     print "data splitted"
     start = time()
@@ -68,7 +67,8 @@ def classifynltk():
     print "written to file"
     test_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["test"]]
     print "test set build"
-    winsound.Beep(2000,2000)
+    for f in range(0,3000)[:50:]:
+        zelda()
     classifier1 = NaiveBayesClassifier.train(train_set)
     print "classifier build"
     print nltk.classify.accuracy(classifier1,test_set)
@@ -158,7 +158,7 @@ def feature_selection(filename,basefeatures,features,num_rounds,num_selections):
     file.close()
     return selection
     
-    
+
     
     
 print "go:"
@@ -166,8 +166,7 @@ print "aantal authors:"+str(len(authors))
 print "------------"
 
 
-
-classifynltk()
+#classifynltk()
 
 
     

@@ -6,7 +6,7 @@ import pickle
 from getcorpus import corpus
 from operator import itemgetter
 import csv
-
+import time
 
 
 def printgeg(): # print wat gegevens over het corp
@@ -216,3 +216,41 @@ def lemmatizer(text):
     for word in text:
         y = lmtzr.lemmatize(word,'v')
         return y
+        
+        
+        
+def zelda(): # sorry, dit moest even... :)
+    winsound.Beep(210,200)
+    winsound.Beep(225,200)
+    winsound.Beep(238,200)
+    winsound.Beep(250,200)
+
+    winsound.Beep(210,200)
+    winsound.Beep(225,200)
+    winsound.Beep(238,200)
+    winsound.Beep(250,200)
+
+    winsound.Beep(225,180)
+    winsound.Beep(238,180)
+    winsound.Beep(250,180)
+    winsound.Beep(262,180)
+
+    winsound.Beep(225,180)
+    winsound.Beep(238,180)
+    winsound.Beep(250,180)
+    winsound.Beep(262,180)
+
+    winsound.Beep(238,150)
+    winsound.Beep(250,150)
+    winsound.Beep(262,150)
+    winsound.Beep(275,150)
+
+    winsound.Beep(238*2,150)
+    winsound.Beep(250*2,150)
+    winsound.Beep(262*2,150)
+    winsound.Beep(275*2,160)
+    time.sleep(1)
+    winsound.Beep(210*4,150)
+    winsound.Beep(225*4,150)
+    winsound.Beep(238*4,150)
+    winsound.Beep(250*4,1100)
