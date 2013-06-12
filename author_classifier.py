@@ -10,7 +10,7 @@ import pickle
 import datetime
 from math import *
 import winsound
-
+from time import time
 
 corp=corpus(50)
 compactcorpus = compactcorpus(corp)
@@ -59,9 +59,10 @@ def classifynltk():
     data = split_train_test_data(authors, corp,45)
     print "data splitted"
     start = time()
-    train_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["train"]]
+    #train_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["train"]]
+    train_set = getfromfile("train_set_superveelfeat.pkl")
     print "train set build in "+str(time()-start)+" seconds"
-    writetofile(train_set,"train_set_superveelfeat.pkl")
+    #writetofile(train_set,"train_set_superveelfeat.pkl")
     winsound.Beep(2000,2000)
     print "written to file"
     test_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["test"]]
@@ -164,7 +165,7 @@ print "aantal authors:"+str(len(authors))
 print "------------"
 
 
-#classifynltk()
+classifynltk()
 
 
     

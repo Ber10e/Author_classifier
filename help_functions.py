@@ -7,6 +7,7 @@ from getcorpus import corpus
 from operator import itemgetter
 import csv
 import time
+import winsound
 
 
 def printgeg(): # print wat gegevens over het corp
