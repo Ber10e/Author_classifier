@@ -11,11 +11,12 @@ import datetime
 from math import *
 import winsound
 from time import time
+import webbrowser
+
 
 corp=corpus(50)
 compactcorpus = compactcorpus(corp)
 authors = compactcorpus.keys()
-
 
 def document_features(document): 
     features = {}
@@ -40,8 +41,7 @@ def pos_features():
     features = minimal_trigram_occurence + minimal_bigram_occurence +  minimal_wrdoccurence
     print "pos feat in:"+str(time()-start)
     return features
-    
-    
+        
 def feat_dict(pos_feat,text):
     """
     Geeft het dictionary van alle features toegepast in een text.
@@ -55,26 +55,28 @@ def feat_dict(pos_feat,text):
 def classifynltk():
     pos_feat = pos_features()
     print "aantal features:"+str(len(pos_feat))
-    winsound.Beep(1500,1000)
+    #winsound.Beep(1500,1000)
     data = split_train_test_data(authors, corp,45)
     print "data splitted"
     start = time()
+    print "starting with training...good luck.. enjoy some nice music!"
+    webbrowser.open("http://radioplayer.omroep.nl/radio4-default/",2)    
     #train_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["train"]]
     train_set = getfromfile("train_set_superveelfeat.pkl")
     print "train set build in "+str(time()-start)+" seconds"
     #writetofile(train_set,"train_set_superveelfeat.pkl")
-    winsound.Beep(2000,2000)
+    #winsound.Beep(2000,1000)
     print "written to file"
     test_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["test"]]
     print "test set build"
     classifier1 = NaiveBayesClassifier.train(train_set)
+    writetofile(classifier1,"classifier.pkl")
     print "classifier build"
     print nltk.classify.accuracy(classifier1,test_set)
-    zelda()
+    #zelda()
+    classifier1.show_most_informative_features(20) 
+
     
-
-
-
 def test_features1(features):
     """
     Calculates the P(feature), P(feature|category) for every category, and the variance.
@@ -156,16 +158,11 @@ def feature_selection(filename,basefeatures,features,num_rounds,num_selections):
         file.write("["+str(f) +"]:" + str(prec) + "\n")
     file.close()
     return selection
-    
-
-    
-    
+        
 print "go:"
 print "aantal authors:"+str(len(authors))
 print "------------"
 
 
 classifynltk()
-
-
     
