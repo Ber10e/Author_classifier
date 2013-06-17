@@ -23,7 +23,6 @@ def features(fs, textU):
     Args:String (featurename), String (text)
     Returns: Boolean
     """
-    text = textU.lower()
     if(not(re.search(wordoccur,fs)==None)): # ----------------------word occurence features
         m = re.search(wordoccur,fs)
         return (wrd_occurs_in_text(m.groups()[0],text) >int(m.groups()[1]) )
