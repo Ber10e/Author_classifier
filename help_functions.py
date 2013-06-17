@@ -225,17 +225,14 @@ print lemmatizer(remove_stopwords(word_tokenize(text.lower())))
 
 
 def meest_voorkomende_woordsoort(text):
-	"""  Zoek naar neest voorkomende woordsoort
+	"""  Zoek naar neest voorkomende woordsoort. 
+	Zonder tagger zoekt de methode eerst naar verb.
 	args: voor(lemmatized, tokenized en lowered) text
 	returns: dictionary met als key de woorden, als value aantal voorkomens. 
 	"""
 	dict = {}
 	ls_unknown_words = []
 	
-	"""
-	[synset()]
-	"""
-	print wn.synset('three.a.01').hypernyms()
 	#[0] om de eerste uit de synsetlijst te krijgen
 	
 	for x in text:
