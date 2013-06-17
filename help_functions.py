@@ -222,6 +222,66 @@ def lemmatizer(list):
 		outputlist.append(str(z))
 	return outputlist
 print lemmatizer(remove_stopwords(word_tokenize(text.lower())))
+
+
+def meest_voorkomende_woordsoort(text):
+	"""  Zoek naar neest voorkomende woordsoort
+	args: voor(lemmatized, tokenized en lowered) text
+	returns: dictionary met als key de woorden, als value aantal voorkomens. 
+	"""
+	dict = {}
+	ls_unknown_words = []
+	
+	"""
+	[synset()]
+	"""
+	print wn.synset('three.a.01').hypernyms()
+	#[0] om de eerste uit de synsetlijst te krijgen
+	
+	for x in text:
+			
+		print x
+		if wn.synsets(x, pos=wn.VERB):
+			print 'we have a verb ' + str(x)
+			try: 
+				if wn.synset(x+'.v.01').hypernyms()[0].lemma_names[0] not in dict:
+					dict[wn.synset(x+'.v.01').hypernyms()[0].lemma_names[0]] = 0
+				else: dict[wn.synset(x+'.v.01').hypernyms()[0].lemma_names[0]] += 1
+			except IndexError:
+				if x not in dict:
+					dict[x] =0
+				else: dict[x] += 1
+		elif wn.synsets(x, pos=wn.ADJ):
+			print 'we have a adj ' + str(x)
+			try:
+				if wn.synset(x+'.a.01').hypernyms()[0].lemma_names[0] not in dict:
+					dict[wn.synset(x+'.a.01').hypernyms()[0].lemma_names[0]] = 0
+				else: dict[wn.synset(x+'.a.01').hypernyms()[0].lemma_names[0]] += 1
+			except IndexError:
+				if x not in dict:
+					dict[x] =0
+				else: dict[x] += 1
+		elif wn.synsets(x, pos=wn.NOUN):
+			print 'we have a noun ' + str(x)
+			try:
+				if wn.synset(x+'.n.01').hypernyms()[0].lemma_names[0] not in dict:
+					dict[wn.synset(x+'.n.01').hypernyms()[0].lemma_names[0]] = 0
+				else: dict[wn.synset(x+'.n.01').hypernyms()[0].lemma_names[0]] += 1
+			except IndexError:
+				if x not in dict:
+					dict[x] =0
+				else: dict[x] += 1
+		else:
+			print 'we have a unknown' + str(x)
+			ls_unknown_words.append(x)
+	print dict
+	
+	print ls_unknown_words
+	
+		
+meest_voorkomende_woordsoort(lemmatizer(remove_stopwords(word_tokenize(text.lower()))))
+
+
         
         
         
