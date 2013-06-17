@@ -209,9 +209,9 @@ def remove_stopwords(list):
    return([word for word in list if word not in stopwords.words('english')])
    
 def lemmatizer(list):
-    """lemmatizer voor alle woorden.
-	arg: Geef gesplitte tekst mee
-	returns: lemmatized woorden.
+    """lemmatizer voor verbs en nouns.
+	arg: Geef lijst mee
+	returns: lemmatized text.
 	"""
 	outputlist=[]
 	lmtzr = WordNetLemmatizer()
