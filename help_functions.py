@@ -209,8 +209,8 @@ def remove_stopwords(list):
    return([word for word in list if word not in stopwords.words('english')])
    
 def lemmatizer(list):
-    """lemmatizer voor verbs en nouns.
-	arg: Geef lijst mee
+    """lemmatizer for verbs and nouns.
+	arg: list 
 	returns: lemmatized text.
 	"""
 	outputlist=[]
@@ -224,63 +224,59 @@ def lemmatizer(list):
 print lemmatizer(remove_stopwords(word_tokenize(text.lower())))
 
 
-def meest_voorkomende_woordsoort(text):
-	"""  Zoek naar neest voorkomende woordsoort. 
-	Zonder tagger zoekt de methode eerst naar verb.
-	args: voor(lemmatized, tokenized en lowered) text
-	returns: dictionary met als key de woorden, als value aantal voorkomens. 
+def most_freq_word_class(text):
+	"""  Search for most frequent word class with synsets and hypernyms. 
+	note; no distiction between verb or noun (we need a tokenizer for this). Likewise, when two
+	subjects are most frequent, the method takes the first on the list
+	args: (lemmatized, tokenized en lowered) text
+	returns: prints list with onclassifyable words and most frequent word class, which should be the subject
+	of the text, hopefully usable as feature. 
 	"""
 	dict = {}
 	ls_unknown_words = []
-	
-	#[0] om de eerste uit de synsetlijst te krijgen
-	
-	for x in text:
-			
-		print x
-		if wn.synsets(x, pos=wn.VERB):
-			print 'we have a verb ' + str(x)
+	sorted_dict = {}
+
+	for word in text:	
+		#Verb
+		if wn.synsets(word, pos=wn.VERB):
 			try: 
-				if wn.synset(x+'.v.01').hypernyms()[0].lemma_names[0] not in dict:
-					dict[wn.synset(x+'.v.01').hypernyms()[0].lemma_names[0]] = 0
-				else: dict[wn.synset(x+'.v.01').hypernyms()[0].lemma_names[0]] += 1
-			except IndexError:
-				if x not in dict:
-					dict[x] =0
-				else: dict[x] += 1
-		elif wn.synsets(x, pos=wn.ADJ):
-			print 'we have a adj ' + str(x)
+				if wn.synset(word+'.v.01').hypernyms()[0].lemma_names[0] not in dict:
+					dict[wn.synset(word+'.v.01').hypernyms()[0].lemma_names[0]] = 0
+				else: dict[wn.synset(word+'.v.01').hypernyms()[0].lemma_names[0]] += 1
+			except IndexError: #opvangen indexError als er geen hypernyms voor word is.
+				if word not in dict:
+					dict[word] =0
+				else: dict[word] += 1
+		#Adverb
+		elif wn.synsets(word, pos=wn.ADJ):
 			try:
-				if wn.synset(x+'.a.01').hypernyms()[0].lemma_names[0] not in dict:
-					dict[wn.synset(x+'.a.01').hypernyms()[0].lemma_names[0]] = 0
-				else: dict[wn.synset(x+'.a.01').hypernyms()[0].lemma_names[0]] += 1
+				if wn.synset(word+'.a.01').hypernyms()[0].lemma_names[0] not in dict:
+					dict[wn.synset(word+'.a.01').hypernyms()[0].lemma_names[0]] = 0
+				else: dict[wn.synset(word+'.a.01').hypernyms()[0].lemma_names[0]] += 1
 			except IndexError:
-				if x not in dict:
-					dict[x] =0
-				else: dict[x] += 1
-		elif wn.synsets(x, pos=wn.NOUN):
-			print 'we have a noun ' + str(x)
+				if word not in dict:
+					dict[word] =0
+				else: dict[word] += 1
+		#Noun		
+		elif wn.synsets(word, pos=wn.NOUN):
 			try:
-				if wn.synset(x+'.n.01').hypernyms()[0].lemma_names[0] not in dict:
-					dict[wn.synset(x+'.n.01').hypernyms()[0].lemma_names[0]] = 0
-				else: dict[wn.synset(x+'.n.01').hypernyms()[0].lemma_names[0]] += 1
+				if wn.synset(word+'.n.01').hypernyms()[0].lemma_names[0] not in dict:
+					dict[wn.synset(word+'.n.01').hypernyms()[0].lemma_names[0]] = 0
+				else: dict[wn.synset(word+'.n.01').hypernyms()[0].lemma_names[0]] += 1
 			except IndexError:
-				if x not in dict:
-					dict[x] =0
-				else: dict[x] += 1
+				if word not in dict:
+					dict[word] =0
+				else: dict[word] += 1
 		else:
-			print 'we have a unknown' + str(x)
-			ls_unknown_words.append(x)
-	print dict
-	
+			ls_unknown_words.append(word)
+	print 'Unknown words list: '
 	print ls_unknown_words
 	
-		
-meest_voorkomende_woordsoort(lemmatizer(remove_stopwords(word_tokenize(text.lower()))))
-
-
-        
-        
+	#feature_distribution	
+	sorted_list =  sorted(FreqDist(dict).iteritems(),key=itemgetter(1), reverse=True)
+	return sorted_list[0][0]	
+most_freq_word_class(lemmatizer(remove_stopwords(word_tokenize(text))))
+   
         
 def zelda(): # sorry, dit moest even... :)
     winsound.Beep(210,200)
