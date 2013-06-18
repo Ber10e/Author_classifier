@@ -1,13 +1,19 @@
-from nltk import FreqDist,bigrams, trigrams, ngrams
-from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
-from nltk.corpus import stopwords
+import nltk
 import random
 import pickle
-from getcorpus import corpus
-from operator import itemgetter
 import csv
 import time
 import winsound
+import operator
+from nltk import FreqDist,bigrams, trigrams, ngrams
+from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
+from nltk.corpus import stopwords
+from nltk.corpus import wordnet as wn
+from collections import defaultdict
+from nltk.stem.wordnet import WordNetLemmatizer
+from nltk import FreqDist
+from getcorpus import corpus
+from operator import itemgetter
 
 
 def printgeg(): # print wat gegevens over het corp
