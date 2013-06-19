@@ -15,10 +15,10 @@ import webbrowser
 
 
 corp=corpus(5)
-#lemcorp = lemmatize_corpus(corp)
-lemcorp = getfromfile("lemmatized_corpus.pkl")
-compactcorpus_lem = compactcorpus(lemcorp)
+#corp = lemmatize_corpus(corp0)
+#corp = getfromfile("lemmatized_corpus.pkl")
 compactcorpus = compactcorpus(corp)
+
 print "normal + lemmatized corpus build"
 authors = compactcorpus.keys()
 
@@ -59,7 +59,7 @@ def feat_dict(pos_feat,text):
     return dict    
     
 def classifynltk():
-    pos_feat = pos_features()
+    pos_feat = pos_features(compactcorpus)
     print "aantal features:"+str(len(pos_feat))
     #winsound.Beep(1500,1000)
     data = split_train_test_data(authors, corp,45)

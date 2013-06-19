@@ -129,7 +129,8 @@ def trigram_occurs_in_text(trigram,text):
 		if (textlist[i],textlist[i+1],textlist[i+2])==trigram:
 			count +=1
 	return count    
-	
+      
+    
 def common_but_unique(dict,uniqueness):
 	pile = []
 	for a in dict.keys():
@@ -214,7 +215,7 @@ def remove_stopwords(list):
 		returns: list not containing stopwords"""
    return([word for word in list if word not in stopwords.words('english')])
    
-   def lemmatize_corpus(corp):
+def lemmatize_corpus(corp):
     lem_corp = []
     for (t,c) in corp:
         lem_corp += [(lemmatize_string(t),c)]
@@ -358,7 +359,7 @@ def skipgrams_dict(authors,compcorp,num):
 	return skipgrams_dict
 
 def skipgram_occurs_in_text(skipgram,text):
-	"""return the number of times the trigram occurs in the text"""
+	"""return the number of times the skipgram occurs in the text"""
 	count = 0
 	textlist = word_tokenize(text.lower())
 	for i in range(0,len(textlist)-7):
