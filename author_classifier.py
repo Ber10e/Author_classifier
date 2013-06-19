@@ -15,7 +15,11 @@ import webbrowser
 
 
 corp=corpus(5)
+#lemcorp = lemmatize_corpus(corp)
+lemcorp = getfromfile("lemmatized_corpus.pkl")
+compactcorpus_lem = compactcorpus(lemcorp)
 compactcorpus = compactcorpus(corp)
+print "normal + lemmatized corpus build"
 authors = compactcorpus.keys()
 
 def document_features(document): 
@@ -24,7 +28,7 @@ def document_features(document):
         features[word] = (word in document)
     return features
     
-def pos_features():
+def pos_features(compactcorpus):
     """
     Hier staan alle features die op dit moment gebruikt 
     """

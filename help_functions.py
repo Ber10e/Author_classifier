@@ -214,6 +214,20 @@ def remove_stopwords(list):
 		returns: list not containing stopwords"""
    return([word for word in list if word not in stopwords.words('english')])
    
+   def lemmatize_corpus(corp):
+    lem_corp = []
+    for (t,c) in corp:
+        lem_corp += [(lemmatize_string(t),c)]
+    return lem_corp
+    
+def lemmatize_string(string):
+    text = word_tokenize(string)
+    lem_list = lemmatizer(text)
+    lem_string = ""
+    for word in lem_list:
+        lem_string = lem_string + (word + " ") 
+    return lem_string
+    
 def lemmatizer(list):
 	"""lemmatizer for verbs and nouns.
 	arg: list 
