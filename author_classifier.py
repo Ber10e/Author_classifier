@@ -14,7 +14,7 @@ from time import time
 import webbrowser
 
 
-corp=corpus(50)
+corp=corpus(5)
 compactcorpus = compactcorpus(corp)
 authors = compactcorpus.keys()
 
@@ -33,12 +33,14 @@ def pos_features():
     wrds = common_but_unique(ngrams_dict(1,authors,compactcorpus,25,False),3)
     bigrams = common_but_unique(ngrams_dict(2,authors,compactcorpus,25,False),3)
     trigrams = common_but_unique(ngrams_dict(3,authors,compactcorpus,25,False),3)
+    skipgrams = common_but_unique(skipgrams_dict(authors,compactcorpus,25),3)
 
     minimal_wrdoccurence = ["wrd:"+wrd+">"+str(num) for wrd in wrds for num in range(0,1)]
     minimal_trigram_occurence = ["tri:("+str(tri[0])+","+str(tri[1])+","+str(tri[2])+")>"+str(num) for tri in trigrams for num in range(0,1)]
     minimal_bigram_occurence = ["bi:("+str(bi[0])+","+str(bi[1])+")>"+str(num) for bi in bigrams for num in range(0,1)]
+    minimal_skipgram_occurence = ["skip:("+str(skip[0])+","+str(skip[1])+","+str(skip[2])+")>"+str(num) for skip in skipgrams for num in range(0,1)]
 
-    features = minimal_trigram_occurence + minimal_bigram_occurence +  minimal_wrdoccurence
+    features = minimal_trigram_occurence + minimal_bigram_occurence +  minimal_wrdoccurence + minimal_skipgram_occurence
     print "pos feat in:"+str(time()-start)
     return features
         
@@ -60,9 +62,9 @@ def classifynltk():
     print "data splitted"
     start = time()
     print "starting with training...good luck.. enjoy some nice music!"
-    webbrowser.open("http://radioplayer.omroep.nl/radio4-default/",2)    
-    #train_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["train"]]
-    train_set = getfromfile("train_set_superveelfeat.pkl")
+    #webbrowser.open("http://radioplayer.omroep.nl/radio4-default/",2)    
+    train_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["train"]]
+    #train_set = getfromfile("train_set_superveelfeat.pkl")
     print "train set build in "+str(time()-start)+" seconds"
     #writetofile(train_set,"train_set_superveelfeat.pkl")
     #winsound.Beep(2000,1000)

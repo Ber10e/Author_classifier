@@ -5,6 +5,7 @@ print "features imported"
 wordoccur = re.compile(r"^wrd:(.+)>(.+)$")
 bioccur = re.compile(r"^bi:\((.+),(.+)\)>(.+)$")
 trioccur = re.compile(r"^tri:\((.+),(.+),(.+)\)>(.+)$")
+skipoccur = re.compile(r"^skip:\((.+),(.+),(.+)\)>(.+)$")
 
 
 """
@@ -18,7 +19,7 @@ tri:(the,man,said)>2
 
 
 
-def features(fs, textU):
+def features(fs, text):
     """ Calculates if a features is applicable to a text.
     Args:String (featurename), String (text)
     Returns: Boolean
@@ -34,6 +35,10 @@ def features(fs, textU):
         m = re.search(bioccur,fs)
         tuple = (m.groups()[0],m.groups()[1])
         return (bigram_occurs_in_text(tuple,text) >int(m.groups()[2]) )
+    elif(not(re.search(skipoccur,fs)==None)):
+        m = m = re.search(skipoccur,fs)
+        tuple =(m.groups()[0],m.groups()[1],m.groups()[2])
+        return (skipgram_occurs_in_text(tuple,text) >int(m.groups()[3]) )
     else:
         return (fs(text))
       
