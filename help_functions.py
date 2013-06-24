@@ -2,7 +2,7 @@ import nltk
 import random
 import pickle
 import csv
-from time import time
+from time import time,sleep
 import winsound
 import operator
 from nltk import FreqDist,bigrams, trigrams, ngrams
@@ -179,16 +179,16 @@ def ngrams_author(n,author,compcorp,num,removestopwords):
 	if n==1:
 		for (text,cat) in compcorp[author]:
 			if removestopwords:
-				ngrams0 += remove_stopwords(word_tokenize(text.lower()))
+				ngrams0 += remove_stopwords(word_tokenize(text))
 			else:
-				ngrams0 += word_tokenize(text.lower())
+				ngrams0 += word_tokenize(text)
 	
 	else:
 		for (text,cat) in compcorp[author]:
 			if removestopwords:
-				ngrams0 += ngrams(remove_stopwords(word_tokenize(text.lower())),n)
+				ngrams0 += ngrams(remove_stopwords(word_tokenize(text)),n)
 			else:
-				ngrams0 += ngrams(word_tokenize(text.lower()),n)
+				ngrams0 += ngrams(word_tokenize(text),n)
 
 	return sorted(FreqDist(ngrams0).iteritems(), key=itemgetter(1), reverse=True) [:num]
 

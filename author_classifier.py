@@ -10,13 +10,13 @@ import pickle
 import datetime
 from math import *
 import winsound
-from time import time
+from time import time,sleep
 import webbrowser
 
 
-corp=corpus(5)
+corp=corpus(50)
 #corp = lemmatize_corpus(corp0)
-#corp = getfromfile("lemmatized_corpus.pkl")
+#writetofile(corp,"lemmatized_corpus.pkl")
 compactcorpus = compactcorpus(corp)
 
 print "normal + lemmatized corpus build"
@@ -34,17 +34,17 @@ def pos_features(compactcorpus):
     """
     start=time()
     
-    wrds = common_but_unique(ngrams_dict(1,authors,compactcorpus,25,False),3)
-    bigrams = common_but_unique(ngrams_dict(2,authors,compactcorpus,25,False),3)
-    trigrams = common_but_unique(ngrams_dict(3,authors,compactcorpus,25,False),3)
-    skipgrams = common_but_unique(skipgrams_dict(authors,compactcorpus,25),3)
+    wrds = common_but_unique(ngrams_dict(1,authors,compactcorpus,50,False),5)
+    #bigrams = common_but_unique(ngrams_dict(2,authors,compactcorpus,50,False),5)
+    #trigrams = common_but_unique(ngrams_dict(3,authors,compactcorpus,10,False),5)
+    #skipgrams = common_but_unique(skipgrams_dict(authors,compactcorpus,10),5)
 
     minimal_wrdoccurence = ["wrd:"+wrd+">"+str(num) for wrd in wrds for num in range(0,1)]
-    minimal_trigram_occurence = ["tri:("+str(tri[0])+","+str(tri[1])+","+str(tri[2])+")>"+str(num) for tri in trigrams for num in range(0,1)]
+    #minimal_trigram_occurence = ["tri:("+str(tri[0])+","+str(tri[1])+","+str(tri[2])+")>"+str(num) for tri in trigrams for num in range(0,1)]
     minimal_bigram_occurence = ["bi:("+str(bi[0])+","+str(bi[1])+")>"+str(num) for bi in bigrams for num in range(0,1)]
-    minimal_skipgram_occurence = ["skip:("+str(skip[0])+","+str(skip[1])+","+str(skip[2])+")>"+str(num) for skip in skipgrams for num in range(0,1)]
+    #minimal_skipgram_occurence = ["skip:("+str(skip[0])+","+str(skip[1])+","+str(skip[2])+")>"+str(num) for skip in skipgrams for num in range(0,1)]
 
-    features = minimal_trigram_occurence + minimal_bigram_occurence +  minimal_wrdoccurence + minimal_skipgram_occurence
+    features = minimal_bigram_occurence +  minimal_wrdoccurence #+ minimal_trigram_occurence + minimal_skipgram_occurence
     print "pos feat in:"+str(time()-start)
     return features
         
@@ -53,14 +53,17 @@ def feat_dict(pos_feat,text):
     Geeft het dictionary van alle features toegepast in een text.
     """
     dict = {}
+    bigrams = ngrams(word_tokenize(text),2)
+    #trigrams = ngrams(word_tokenize(text),3)
     
     for feat in pos_feat:
-        dict[feat]=features(feat,text)
+        dict[feat]=features(feat,text,bigrams,[],[])
     return dict    
     
 def classifynltk():
     pos_feat = pos_features(compactcorpus)
     print "aantal features:"+str(len(pos_feat))
+    print "aantal auteurs:" + str(len(authors))
     #winsound.Beep(1500,1000)
     data = split_train_test_data(authors, corp,45)
     print "data splitted"
@@ -71,18 +74,50 @@ def classifynltk():
     #train_set = getfromfile("train_set_superveelfeat.pkl")
     print "train set build in "+str(time()-start)+" seconds"
     #writetofile(train_set,"train_set_superveelfeat.pkl")
-    #winsound.Beep(2000,1000)
-    print "written to file"
+    winsound.Beep(2000,1000)
     test_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["test"]]
     print "test set build"
     classifier1 = NaiveBayesClassifier.train(train_set)
-    writetofile(classifier1,"classifier.pkl")
+    writetofile((classifier1,pos_feat),"classifiertest.pkl")
     print "classifier build"
+    print "written to file 'classifiertest.pkl'"
     print nltk.classify.accuracy(classifier1,test_set)
     #zelda()
-    classifier1.show_most_informative_features(20) 
+    classifier1.show_most_informative_features(10) 
 
-    
+def optimalize():
+    start = time()
+    max = 0
+    maxn=2
+    dict = {}
+    print "start optimalization of: wrd-features,uniqueness"
+    for n in range(3,10):
+        score=0
+        print ">>>n(uniqueness):"+str(n)
+        wrds = common_but_unique(ngrams_dict(1,authors,compactcorpus,50,False),n)
+        pos_feat = ["wrd:"+wrd+">"+str(num) for wrd in wrds for num in range(0,1)]
+        print "number of features AFTER selection:" + str(len(pos_feat))
+        for x in range(0,4):
+            data = split_train_test_data(authors, corp,45)
+            train_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["train"]]
+            train_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["train"]]
+            test_set = [(feat_dict(pos_feat,d), c) for (d, c) in data["test"]]
+            classifier1 = NaiveBayesClassifier.train(train_set)
+            acc = nltk.classify.accuracy(classifier1,test_set)
+            print "accuracy:"+str(acc)
+            score +=acc
+        print "score(" + str(n) +")="+str(score/4)
+        classifier1.show_most_informative_features(8)
+        dict[n]=(score/4)
+        if(score/4)>max:
+            max = (score/4)
+            maxn =n
+    writetofile(dict,"optimalizedict.pkl")
+    print "max score="+str(max)
+    print "where n = "+str(maxn)
+    print "time:"+str(time()-start)
+
+   
 def test_features1(features):
     """
     Calculates the P(feature), P(feature|category) for every category, and the variance.
@@ -166,9 +201,23 @@ def feature_selection(filename,basefeatures,features,num_rounds,num_selections):
     return selection
         
 print "go:"
-print "aantal authors:"+str(len(authors))
+#print "aantal authors:"+str(len(authors))
 print "------------"
 
 
-classifynltk()
-    
+#classifynltk()
+optimalize()
+"""    
+test = "BOSTON, June 6 (Reuters) - Investors may have overreacted recently to the possibility of the U.S. Federal Reserve winding down its asset-buying stimulus, a top U.S. central bank official said on Thursday. U.S. bond and stock markets abruptly sold off on May 22 when Fed Chairman Ben Bernanke told a congressional committee that the central bank's $85 billion in monthly purchases could be reduced 'in the next few meetings' of the Fed's policy committee if the economy continues to gain traction."
+test2 = "NEW YORK (Reuters) - Barry Rosenstein's JANA Partners liked grocery chain Supervalu Inc in a big way in the first quarter, while Philippe Laffont's Coatue Management lost its stomach for the company's shares. Regulatory filings revealed that JANA, a hedge fund with $5.5 billion in assets, picked up some 14 million shares of Supervalu in the quarter ended March 31. For Laffont's 9$.5 billion firm, however, it was a different story, as the hedge fund dumped all of its roughly 10 million shares."
+testc = (test)
+go = feat_dict(pos_features(compactcorpus),test2)
+classifier0 = getfromfile("classifier_lem_1247feat_0,776ac.pkl")
+
+thing = classifier0.prob_classify(go)
+for sample in thing.samples():
+    print sample + "\t :"+ str(thing.prob(sample))
+
+print "classified as:"
+print classifier0.classify(go)
+"""
