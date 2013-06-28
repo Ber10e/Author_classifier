@@ -156,6 +156,27 @@ def compactcorpus(corp):
 			dict[c].append((t,c))
 	return dict
 
+def compact_to_tag(compactcorpus):# uiteindelijk niet gebruikt ivm tijd, duurt erg lang!
+    """
+        maakt van een compactcorpus een getagd compactcorpus
+    """
+    tag_compact={}
+    for author in compactcorpus.keys():
+        tag_compact[author]=[]
+        for (text,c) in compactcorpus[author]:
+            tag_compact[author] +=[(tag(text))]
+    return tag_compact
+
+def tag(text):
+    """
+    neemt een string (text) en geeft een string van POS terug 
+    bijv: "hallo daar" -> "NN NN"
+    """
+    tagged_text = ""
+    for (w,tag) in nltk.pos_tag(text):
+        tagged_text += tag + " "
+    return tagged_text
+    
 def variance(list):
 	n = 0
 	sum = 0
