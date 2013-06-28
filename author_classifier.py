@@ -12,7 +12,7 @@ from math import *
 import winsound
 from time import time,sleep
 import webbrowser
-
+import os
 
 corp=corpus(50)
 #corp = lemmatize_corpus(corp0)
@@ -78,7 +78,34 @@ def classifynltk():
     writetofile((classifier1,pos_feat),"classifiertest.pkl")
     print "classifier build"
     print "written to file 'classifiertest.pkl'"
-    print nltk.classify.accuracy(classifier1,test_set)
+    
+    classified=[]
+    actual=[]
+    correctcounter = 0
+
+    for (text,cat) in data["test"]:
+        feats = feat_dict(pos_feat,text)
+        classified.append(classifier1.classify(feats))
+        actual.append(cat)
+        if classifier1.classify(feats) == cat:
+            correctcounter+=1
+
+    print "Runtime: "+str(time()-start)
+    print "\n==============="
+    print "Accuracy: "+str(correctcounter/float(len(classified)))
+    print "===============\n"
+
+    #confusion matrix
+    cm = nltk.ConfusionMatrix(actual,classified)
+    matrixfile="errormatrix"+str(time())+".txt"
+    print "Writing error matrix to: "+matrixfile
+    f = open(matrixfile,"w")
+    f.write(cm.pp())
+    f.close()
+    os.startfile(matrixfile)
+    
+    
+    #print nltk.classify.accuracy(classifier1,test_set)
     #zelda()
     classifier1.show_most_informative_features(10) 
     winsound.Beep(2000,1000)
